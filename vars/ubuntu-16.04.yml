@@ -48,3 +48,25 @@ neutron_remove_distro_packages:
 
 neutron_lbaasv2_initscript_path: "/etc/init/neutron-lbaasv2-agent.conf"
 neutron_lbaasv2_agent_servicename: "neutron-lbaasv2-agent"
+
+opflex_distro_packages:
+  - lldpd
+  - neutron-opflex-agent
+  - neutron-ml2-driver-apic
+
+opflex_distro_gbp_packages:
+  - group-based-policy
+  - group-based-policy-automation
+  - group-based-policy-ui
+  - python-group-based-policy-client
+
+opflex_distro_ovs_packages:
+  - agent-ovs
+
+opflex_distro_server_packages:
+  - python-apicapi
+
+opflex_apt_repo_url: "localhost/ubuntu"
+opflex_repo:
+  repo: "deb [trusted=yes] {{ opflex_apt_repo_url }} {{ ansible_distribution_release }} main"
+  state: present

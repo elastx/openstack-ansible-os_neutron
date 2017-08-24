@@ -187,6 +187,14 @@ neutron_plugins:
     mechanisms: "sriovnicswitch"
     plugin_ini: plugins/ml2/sriov_nic_agent.ini
     plugin_conf_ini_overrides: "{{ neutron_sriov_nic_agent_ini_overrides }}"
+  ml2.opflex:
+    driver_firewall: iptables_hybrid
+    driver_interface: openvswitch
+    drivers_type: "{{ neutron_ml2_drivers_type }}"
+    mechanisms: "{% if opflex_use_gbp | bool %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
+    plugin_conf_ini_overrides: "{{ neutron_opflex_conf_ini_overrides }}"
+    plugin_core: ml2
+    plugin_ini: plugins/ml2/ml2_conf.ini
 
 neutron_dhcp_agent_init_overrides: {}
 neutron_openvswitch_agent_init_overrides: {}
@@ -320,7 +328,7 @@ neutron_services:
    group: neutron_server
    service_name: neutron-server
    service_en: True
-   config_options: "--config-file {{ neutron_conf_dir }}/neutron.conf --config-file {{ neutron_conf_dir }}/{{ neutron_plugins[neutron_plugin_type].plugin_ini }} --log-file=/var/log/neutron/neutron-server.log"
+   config_options: "--config-file {{ neutron_conf_dir }}/neutron.conf --config-file {{ neutron_conf_dir }}/{{ neutron_plugins[neutron_plugin_type].plugin_ini }} --log-file=/var/log/neutron/neutron-server.log {% if neutron_plugin_type == 'ml2.opflex' %}--config-file {{ neutron_conf_dir}}/ml2_conf_cisco_apic.ini{%endif%}"
    init_config_overrides: "{{ neutron_server_init_overrides }}"
    start_order: 1
  calico-felix:
@@ -358,6 +366,24 @@ neutron_services:
    config_overrides: "{{ neutron_sriov_nic_agent_ini_overrides }}"
    config_type: "ini"
    init_config_overrides: "{{ neutron_sriov_nic_agent_init_overrides }}"
+   start_order: 3
+ opflex-agent-ovs:
+   group: opflex-agent-ovs
+   service_name: agent-ovs
+   service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
+   config_options: ""
+   start_order: 2
+ opflex-apic-host-agent:
+   group: opflex-apic-host-agent
+   service_name: neutron-cisco-apic-host-agent
+   service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
+   config_options: ""
+   start_order: 3
+ opflex-neutron-agent:
+   group: opflex-neutron-agent
+   service_name: neutron-opflex-agent
+   service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
+   config_options: ""
    start_order: 3
 
 ## Neutron DHCP Agent
@@ -417,7 +443,7 @@ neutron_driver_network_scheduler: neutron.scheduler.dhcp_agent_scheduler.WeightS
 neutron_driver_router_scheduler: neutron.scheduler.l3_agent_scheduler.LeastRoutersScheduler
 neutron_driver_loadbalancer_pool_scheduler: neutron_lbaas.services.loadbalancer.agent_scheduler.ChanceScheduler
 neutron_driver_metering: neutron.services.metering.drivers.iptables.iptables_driver.IptablesMeteringDriver
-neutron_driver_dhcp: neutron.agent.linux.dhcp.Dnsmasq
+neutron_driver_dhcp: "{% if neutron_plugin_type == 'ml2.opflex' %}apic_ml2.neutron.agent.linux.apic_dhcp.ApicDnsmasq{% else %}neutron.agent.linux.dhcp.Dnsmasq{% endif %}"
 neutron_driver_quota: neutron.db.quota.driver.DbQuotaDriver
 
 
@@ -629,3 +655,28 @@ neutron_bgp_dragent_ini_overrides: {}
 neutron_calico_dhcp_agent_ini_overrides: {}
 neutron_calico_felix_ini_overrides: {}
 neutron_sriov_nic_agent_ini_overrides: {}
+neutron_opflex_conf_ini_overrides: {}
+neutron_opflex_network_constraints_ini_overrides: {}
+neutron_opflex_agent_ovs_json_overrides: {}
+
+###
+### Opflex Configuration
+###
+
+# See documentation section titled "Scenario - Using the OpFlex neutron plugin"
+opflex_gbp_enabled: false
+opflex_integration_bridge: br-int
+opflex_uplink_iface: eth15
+opflex_uplink_vlan: 4093
+opflex_vlan_trunk_iface: eth11
+
+opflex_apic_system_id: ""
+opflex_apic_hosts:
+  - 10.0.0.1
+  - 10.0.0.2
+opflex_apic_peer_svi: 10.0.0.30
+opflex_apic_remote_ip: 10.0.0.32
+opflex_apic_user: opflex
+opflex_apic_password: opflex
+opflex_apic_use_ssl: True
+opflex_apic_name_mapping: use_name

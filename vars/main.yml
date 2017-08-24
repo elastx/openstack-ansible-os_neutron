@@ -50,3 +50,20 @@ filtered_neutron_services: |-
   {%   endif %}
   {% endfor %}
   {{ services | sort(attribute='start_order') }}
+
+# Compile a list of the optional Opflex packages to install
+# based on whether the host is in the host group and the
+# service is enabled.
+#
+neutron_optional_opflex_packages: |-
+  {% set packages = opflex_distro_packages %}
+  {% if neutron_services['neutron-server']['group'] in group_names %}
+  {%   set _ = packages.extend(opflex_distro_server_packages) %}
+  {% endif %}
+  {% if (neutron_services['neutron-server']['group'] in group_names and opflex_gbp_enabled | bool) %}
+  {%   set _ = packages.extend(opflex_distro_gbp_packages) %}
+  {% endif %}
+  {% if (neutron_services['opflex-agent-ovs']['group'] in group_names and neutron_services['opflex-agent-ovs'].service_en | bool) %}
+  {%   set _ = packages.extend(opflex_distro_ovs_packages) %}
+  {% endif %}
+  {{ packages }}

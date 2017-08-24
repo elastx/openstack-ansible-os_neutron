@@ -1,0 +1,34 @@
+# {{ ansible_managed }}
+
+[DEFAULT]
+apic_system_id = {{ opflex_apic_system_id }}
+
+[opflex]
+networks = '*'
+
+[ml2_cisco_apic]
+apic_hosts = {{ opflex_apic_hosts | join(',') }}
+apic_username = {{ opflex_apic_user }}
+apic_password = {{ opflex_apic_password }}
+apic_use_ssl = {{ opflex_apic_use_ssl | bool }}
+apic_name_mapping = {{ opflex_apic_name_mapping }}
+apic_sync_interval = 0
+apic_agent_report_interval = 30
+apic_agent_poll_interval = 2
+apic_provision_infra = True
+apic_provision_hostlinks = True
+enable_aci_routing = True
+enable_arp_flooding = False
+enable_optimized_dhcp = True
+enable_optimized_metadata = True
+integrated_topology_service = True
+
+network_constraints_filename = /etc/neutron/plugins/ml2/cisco_apic_network_constraints.ini
+
+{% if opflex_gbp_enabled | bool %}
+[group_policy]
+policy_drivers = implicit_policy,apic
+[group_policy_implicit_policy]
+default_ip_pool = {{ opflex_default_ip_pool | default('192.168.0.0/16') }}
+
+{% endif %}

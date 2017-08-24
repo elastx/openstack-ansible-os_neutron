@@ -1,0 +1,59 @@
+{
+    "opflex": {
+        "domain": "comp/prov-OpenStack/ctrlr-[{{ opflex_apic_system_id }}>]-{{ opflex_apic_system_id }}/sw-InsiemeLSOid",
+        "name": "{{ inventory_hostname }}",
+        "peers": [
+            {"hostname": "{{ opflex_apic_peer_svi }}", "port": "8009"}
+        ],
+        "ssl": {
+            "mode": "encrypted"
+            "ca-store": "/etc/ssl/certs"
+        },
+
+        "inspector": {
+            "enabled": true,
+
+            "socket-name": "/var/run/opflex-agent-ovs-inspect.sock"
+        },
+
+        "notif": {
+            "enabled": true,
+            "socket-name": "/var/run/opflex-agent-ovs-notif.sock",
+            "socket-group": "opflexep",
+            "socket-permissions": "770"
+        }
+    },
+
+    "endpoint-sources": {
+        "filesystem": ["/var/lib/opflex-agent-ovs/endpoints"]
+    },
+
+    "service-sources": {
+        "filesystem": ["/var/lib/opflex-agent-ovs/services"]
+    },
+
+    "renderers": {
+        "stitched-mode": {
+            "int-bridge-name": "{{ opflex_integration_bridge }}",
+            
+            "encap": {
+                {% if neutron_vxlan_enabled | bool %}
+                "vxlan" : {
+                    "encap-iface": "{{ opflex_ovs_integration_bridge }}_vxlan0",
+                    "uplink-iface": "{{ opflex_uplink_iface }}",
+                    {% if opflex_uplink_vlan %}
+                    "uplink-vlan": "{ opflex_uplink_vlan }}",
+                    {% endif %}
+                    "remote-ip": "{{ opflex_apic_remote_ip }}",
+                    "remote-port": 8472
+                }
+                {% else %}
+                "vlan" : {
+                    "encap-iface": "{{ opflex_vlan_trunk_iface }}"
+                }
+                {% endif %}
+            },
+            "flowid-cache-dir": "/var/lib/opflex-agent-ovs/ids"
+        }
+    }
+}

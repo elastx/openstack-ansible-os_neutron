@@ -12,6 +12,7 @@ num_sync_threads = {{ neutron_num_sync_threads | default(api_threads) }}
 # Drivers
 interface_driver = {{ neutron_plugins[neutron_plugin_type].driver_interface }}
 dhcp_driver = {{ neutron_driver_dhcp }}
+{% if neutron_plugin_type == 'ml2.opflex' %}ovs_integration_bridge = {{ opflex_ovs_integration_bridge }}{% endif %}
 
 # Default domain for DHCP leases
 dhcp_domain = {{ neutron_dhcp_domain }}
