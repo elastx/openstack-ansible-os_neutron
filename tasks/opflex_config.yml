@@ -26,21 +26,6 @@
   tags:
     - opflex_install
 
-- name: Add opflex repository (YUM)
-  yum_repository:
-    name: "{{ opflex_repo.name }}"
-    description: "{{ opflex_repo.description }}"
-    baseurl: "{{ opflex_repo.baseurl }}"
-    state: "{{ opflex_repo.state }}"
-  register: opflex_add_repo
-  until: opflex_add_repo|success
-  retries: 5
-  delay: 2
-  when: 
-    - ansible_pkg_mgr == 'yum'
-  tags:
-    - opflex_install
-
 - name: Install opflex packages
   package:
     name: "{{ neutron_optional_opflex_packages }}"
@@ -51,6 +36,16 @@
     - opflex_install
   notify:
     - Restart neutron services
+
+- name: Copy dhclient config
+  template:
+    src: "dhclient.conf.j2"
+    dest: "{{ opflex_dhclient_conf_target }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  tags:
+    - opflex_config
 
 - name: Copy opflex config
   config_template:

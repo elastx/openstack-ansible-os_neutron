@@ -70,3 +70,5 @@ opflex_apt_repo_url: "localhost/ubuntu"
 opflex_repo:
   repo: "deb [trusted=yes] {{ opflex_apt_repo_url }} {{ ansible_distribution_release }} main"
   state: present
+
+opflex_dhclient_conf_target: "/etc/dhcp/dhclient.conf"
