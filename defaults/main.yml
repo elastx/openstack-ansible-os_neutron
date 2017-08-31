@@ -367,20 +367,20 @@ neutron_services:
    config_type: "ini"
    init_config_overrides: "{{ neutron_sriov_nic_agent_init_overrides }}"
    start_order: 3
- opflex-agent-ovs:
-   group: opflex-agent-ovs
+ opflex-ovs-agent:
+   group: neutron_opflex_ovs_agent
    service_name: agent-ovs
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    config_options: ""
    start_order: 2
- opflex-apic-host-agent:
-   group: opflex-apic-host-agent
+ opflex-apic-agent:
+   group: neutron_opflex_apic_agent
    service_name: neutron-cisco-apic-host-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    config_options: ""
    start_order: 3
  opflex-neutron-agent:
-   group: opflex-neutron-agent
+   group: neutron_opflex_agent
    service_name: neutron-opflex-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    config_options: ""

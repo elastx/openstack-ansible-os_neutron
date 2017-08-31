@@ -47,7 +47,28 @@
   tags:
     - opflex_config
 
-- name: Copy opflex config
+- name: Copy apic network constraints config
+  config_template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "0640"
+    config_overrides: "{{ item.config_overrides }}"
+    config_type: "{{ item.config_type }}"
+  with_items:
+    - src: "plugins/ml2/cisco_apic_network_constraints.ini.j2"
+      dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
+      config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
+      config_type: "ini"
+  notify:
+    - Restart neutron services
+  when:
+    - neutron_services['neutron-server']['group'] in group_names
+  tags:
+    - opflex_config
+
+- name: Copy opflex ovs agent config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -61,14 +82,10 @@
       dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
       config_overrides: "{{ neutron_opflex_agent_ovs_json_overrides }}"
       config_type: "json"
-    - src: "plugins/ml2/cisco_apic_network_constraints.ini.j2"
-      dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
-      config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
-      config_type: "ini"
   notify:
     - Restart neutron services
   when:
-    - neutron_services['opflex-agent']['group'] in group_names
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
     - opflex_config
 
@@ -78,7 +95,7 @@
     state: present
     fail_mode: secure
   when:
-    - neutron_services['opflex-agent']['group'] in group_names
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
     - opflex_config
 
@@ -89,7 +106,7 @@
     state: present 
     set: "Interface {{ opflex_integration_bridge }}_vxlan0 type=vxlan options:remote_ip=flow options:dst_port=8472"
   when:
-    - (neutron_services['opflex-agent']['group'] in group_names) and (neutron_vxlan_enabled | bool)
+    - (neutron_services['opflex-neutron-agent']['group'] in group_names) and (neutron_vxlan_enabled | bool)
   tags:
     - opflex_config
 
@@ -99,6 +116,6 @@
     port: "{{ opflex_vlan_trunk_iface }}"
     state: present 
   when:
-    - (neutron_services['opflex-agent']['group'] in group_names) and (not neutron_vxlan_enabled | bool)
+    - (neutron_services['opflex-neutron-agent']['group'] in group_names) and (not neutron_vxlan_enabled | bool)
   tags:
     - opflex_config

@@ -49,6 +49,9 @@ neutron_remove_distro_packages:
 neutron_lbaasv2_initscript_path: "/etc/init/neutron-lbaasv2-agent.conf"
 neutron_lbaasv2_agent_servicename: "neutron-lbaasv2-agent"
 
+###
+# Opflex Configuration
+#
 opflex_distro_packages:
   - lldpd
   - neutron-opflex-agent
