@@ -23,7 +23,7 @@ enable_optimized_dhcp = True
 enable_optimized_metadata = True
 integrated_topology_service = True
 
-network_constraints_filename = /etc/neutron/plugins/ml2/cisco_apic_network_constraints.ini
+network_constraints_filename = {{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini
 
 {% if opflex_gbp_enabled | bool %}
 [group_policy]

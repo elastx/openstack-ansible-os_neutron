@@ -128,7 +128,7 @@
 - name: Setup Opflex config
   include: opflex_config.yml
   static: no
-  when: neutron_plugin_type == 'opflex'
+  when: neutron_plugin_type == 'ml2.opflex'
 
 - name: Drop metadata iptables checksum fix
   copy:

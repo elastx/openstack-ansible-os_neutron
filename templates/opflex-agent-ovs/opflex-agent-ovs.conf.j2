@@ -39,7 +39,7 @@
             "encap": {
                 {% if neutron_vxlan_enabled | bool %}
                 "vxlan" : {
-                    "encap-iface": "{{ opflex_ovs_integration_bridge }}_vxlan0",
+                    "encap-iface": "{{ opflex_integration_bridge }}_vxlan0",
                     "uplink-iface": "{{ opflex_uplink_iface }}",
                     {% if opflex_uplink_vlan %}
                     "uplink-vlan": "{ opflex_uplink_vlan }}",

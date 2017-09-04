@@ -54,7 +54,6 @@ neutron_lbaasv2_agent_servicename: "neutron-lbaasv2-agent"
 #
 opflex_distro_packages:
   - lldpd
-  - neutron-opflex-agent
   - neutron-ml2-driver-apic
 
 opflex_distro_gbp_packages:
@@ -63,8 +62,9 @@ opflex_distro_gbp_packages:
   - group-based-policy-ui
   - python-group-based-policy-client
 
-opflex_distro_ovs_packages:
+opflex_distro_agent_packages:
   - agent-ovs
+  - neutron-opflex-agent
 
 opflex_distro_server_packages:
   - python-apicapi

@@ -85,7 +85,7 @@
   notify:
     - Restart neutron services
   when:
-    - neutron_services['opflex-ovs-agent']['group'] in group_names
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
     - opflex_config
 
