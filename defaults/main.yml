@@ -192,7 +192,7 @@ neutron_plugins:
     driver_interface: openvswitch
     drivers_type: "{{ neutron_ml2_drivers_type }}"
     mechanisms: "{% if opflex_gbp_enabled | bool %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
-    plugin_conf_ini_overrides: "{{ neutron_opflex_conf_ini_overrides }}"
+    plugin_conf_ini_overrides: "{{ neutron_ml2_conf_ini_overrides }}"
     plugin_core: ml2
     plugin_ini: plugins/ml2/ml2_conf.ini
 
@@ -373,6 +373,7 @@ neutron_services:
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_override: "/usr/bin/neutron-cisco-apic-host-agent"
    config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini --log-file=/var/log/neutron/cisco-apic-host-agent.log"
+   init_config_overrides: "{{ neutron_opflex_apic_agent_init_overrides }}"
    start_order: 2
  opflex-neutron-agent:
    group: neutron_opflex_agent
@@ -380,6 +381,7 @@ neutron_services:
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_override: "/usr/bin/neutron-opflex-agent"
    config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugin.ini --log-file=/var/log/neutron/opflex-agent.log"
+   init_config_overrides: "{{ neutron_opflex_agent_init_overrides }}"
    start_order: 2
  opflex-ovs-agent:
    group: neutron_opflex_agent
@@ -387,6 +389,8 @@ neutron_services:
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_override: "/usr/bin/agent_ovs"
    config_options: "--syslog -c {{ opflex_agent_ovs_conf_dir }}/opflex-agent-ovs.conf -c {{ opflex_agent_ovs_conf_dir }}/conf.d"
+   config_type: "ini"
+   init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"
    start_order: 2
  opflex-mcast-agent:
    group: neutron_opflex_agent
@@ -394,6 +398,8 @@ neutron_services:
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_override: "/usr/bin/mcast_daemon"
    config_options: "--syslog"
+   config_type: "ini"
+   init_config_overrides: "{{ neutron_opflex_mcast_agent_init_overrides }}"
    start_order: 3
 
 ## Neutron DHCP Agent
@@ -665,9 +671,13 @@ neutron_bgp_dragent_ini_overrides: {}
 neutron_calico_dhcp_agent_ini_overrides: {}
 neutron_calico_felix_ini_overrides: {}
 neutron_sriov_nic_agent_ini_overrides: {}
-neutron_opflex_conf_ini_overrides: {}
+neutron_opflex_ml2_conf_ini_overrides: {}
 neutron_opflex_network_constraints_ini_overrides: {}
 neutron_opflex_agent_ovs_json_overrides: {}
+neutron_opflex_agent_init_overrides: {}
+neutron_opflex_apic_agent_init_overrides: {}
+neutron_opflex_ovs_agent_init_overrides: {}
+neutron_opflex_mcast_agent_init_overrides: {}
 
 ###
 ### Opflex Configuration

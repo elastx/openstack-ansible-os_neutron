@@ -35,7 +35,7 @@
   tags:
     - opflex_install
 
-- name: Copy dhclient config
+- name: Drop dhclient config
   template:
     src: "dhclient.conf.j2"
     dest: "{{ opflex_dhclient_conf_target }}"
@@ -45,7 +45,7 @@
   tags:
     - opflex_config
 
-- name: Copy apic network constraints config
+- name: Drop apic plugin config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -55,6 +55,10 @@
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
+    - src: "plugins/ml2/ml2_conf_cisco_apic.ini.j2"
+      dest: "{{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini"
+      config_overrides: "{{ neutron_opflex_ml2_conf_ini_overrides }}"
+      config_type: "ini"
     - src: "plugins/ml2/cisco_apic_network_constraints.ini.j2"
       dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
       config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
@@ -64,7 +68,7 @@
   tags:
     - opflex_config
 
-- name: Copy opflex ovs agent config
+- name: Drop opflex ovs agent config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
