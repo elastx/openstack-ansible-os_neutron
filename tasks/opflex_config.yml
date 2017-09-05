@@ -34,8 +34,6 @@
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   tags:
     - opflex_install
-  notify:
-    - Restart neutron services
 
 - name: Copy dhclient config
   template:
@@ -61,8 +59,6 @@
       dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
       config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
       config_type: "ini"
-  notify:
-    - Restart neutron services
   when:
     - neutron_services['neutron-server']['group'] in group_names
   tags:
@@ -82,8 +78,6 @@
       dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
       config_overrides: "{{ neutron_opflex_agent_ovs_json_overrides }}"
       config_type: "json"
-  notify:
-    - Restart neutron services
   when:
     - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:

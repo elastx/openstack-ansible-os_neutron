@@ -11,6 +11,6 @@ timeout 60;
 
 interface "{{ opflex_uplink_iface }}" {{ "{" }}
     send host-name "{{ inventory_hostname }}";
-    send dhcp-client-identifier {{ hostvars[inventory_hostname][opflex_uplink_iface + '_mac_address'] }};
+    send dhcp-client-identifier {{ hostvars[inventory_hostname]['ansible_' + opflex_uplink_iface]['macaddress'] }};
 {{ "}" }}
 
