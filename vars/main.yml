@@ -56,7 +56,6 @@ filtered_neutron_services: |-
 # service is enabled.
 #
 neutron_optional_opflex_packages: |-
-  {% set packages = opflex_distro_packages %}
   {% if (neutron_services['neutron-server']['group'] in group_names and opflex_gbp_enabled | bool) %}
   {%   set _ = packages.extend(opflex_distro_gbp_packages) %}
   {% endif %}

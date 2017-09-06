@@ -52,9 +52,6 @@ neutron_lbaasv2_agent_servicename: "neutron-lbaasv2-agent"
 ###
 # Opflex Configuration
 #
-opflex_distro_packages:
-  - lldpd
-
 opflex_distro_gbp_packages:
   - group-based-policy
   - group-based-policy-automation
@@ -63,6 +60,7 @@ opflex_distro_gbp_packages:
 
 opflex_distro_agent_packages:
   - agent-ovs
+  - lldpd
 
 opflex_apt_repo_url: "http://localhost/ubuntu"
 opflex_repo:

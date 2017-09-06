@@ -657,6 +657,7 @@ neutron_proprietary_opflex_pip_packages:
   - apicapi
   - neutron-ml2-driver-apic
   - neutron-opflex-agent
+  - pyOpenSSL
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
