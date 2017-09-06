@@ -55,7 +55,7 @@ filtered_neutron_services: |-
 # based on whether the host is in the host group and the
 # service is enabled.
 #
-neutron_optional_opflex_packages: |-
+neutron_proprietary_opflex_packages: |-
   {% if (neutron_services['neutron-server']['group'] in group_names and opflex_gbp_enabled | bool) %}
   {%   set _ = packages.extend(opflex_distro_gbp_packages) %}
   {% endif %}
@@ -63,3 +63,23 @@ neutron_optional_opflex_packages: |-
   {%   set _ = packages.extend(opflex_distro_agent_packages) %}
   {% endif %}
   {{ packages }}
+
+neutron_proprietary_opflex_pip_packages:
+  {% set packages = neutron_proprietary_opflex_common_pip_packages %}
+  {% if (neutron_services['neutron-server']['group'] in group_names) %}
+  {%   set _ = packages.extend(neutron_proprietary_opflex_server_pip_packages) %}
+  {% endif %}
+  {% if (neutron_services['opflex-neutron-agent']['group'] in group_names and neutron_services['opflex-neutron-agent'].service_en | bool) %}
+  {%   set _ = packages.extend(neutron_proprietary_opflex_agent_pip_packages) %}
+  {% endif %}
+  {{ packages }}
+
+neutron_proprietary_opflex_agent_pip_packages:
+  - neutron-opflex-agent
+  - pyOpenSSL
+
+neutron_proprietary_opflex_common_pip_packages:
+  - neutron-ml2-driver-apic
+
+neutron_proprietary_opflex_server_pip_packages:
+  - apicapi

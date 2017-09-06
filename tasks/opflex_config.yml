@@ -28,7 +28,7 @@
 
 - name: Install opflex distro packages
   package:
-    name: "{{ neutron_optional_opflex_packages }}"
+    name: "{{ neutron_proprietary_opflex_packages }}"
     state: "{{ neutron_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
@@ -61,6 +61,8 @@
     group: "{{ item.group|default(neutron_system_group_name) }}"
   when:
     - neutron_services['opflex-apic-agent']['group'] in group_names
+  tags:
+    - opflex-install
 
 - name: Copy dhclient config
   template:
