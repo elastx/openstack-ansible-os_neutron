@@ -24,18 +24,38 @@
   when: 
     - ansible_pkg_mgr == 'apt'
   tags:
-    - opflex_install
+    - opflex-install
 
-- name: Install opflex packages
+- name: Install opflex distro packages
   package:
     name: "{{ neutron_optional_opflex_packages }}"
     state: "{{ neutron_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
   tags:
-    - opflex_install
+    - opflex-install
+    - opflex-distro-packages
 
-- name: Drop dhclient config
+- name: Install opflex pip packages
+  pip:
+    name: "{{ neutron_proprietary_opflex_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ neutron_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ neutron_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  notify: Restart neutron services
+  tags:
+    - opflex-install
+    - opflex-pip-packages
+
+- name: Copy dhclient config
   template:
     src: "dhclient.conf.j2"
     dest: "{{ opflex_dhclient_conf_target }}"
@@ -43,9 +63,15 @@
     group: "root"
     mode: "0644"
   tags:
-    - opflex_config
+    - opflex-config
 
-- name: Drop apic plugin config
+- name: Release and send DHCP request on apic interface
+  shell: |
+    dhclient -r {{ opflex_uplink_iface }} && dhclient {{ opflex_uplink_iface }}
+  tags:
+    - opflex-config
+
+- name: Copy apic plugin config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -66,9 +92,9 @@
   when:
     - neutron_services['neutron-server']['group'] in group_names
   tags:
-    - opflex_config
+    - opflex-config
 
-- name: Drop opflex ovs agent config
+- name: Copy opflex ovs agent config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -83,9 +109,9 @@
       config_overrides: "{{ neutron_opflex_agent_ovs_json_overrides }}"
       config_type: "json"
   when:
-    - neutron_services['opflex-neutron-agent']['group'] in group_names
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
-    - opflex_config
+    - opflex-config
 
 - name: Create OVS integration bridge
   openvswitch_bridge:
@@ -93,9 +119,9 @@
     state: present
     fail_mode: secure
   when:
-    - neutron_services['opflex-neutron-agent']['group'] in group_names
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
-    - opflex_config
+    - opflex-config
 
 - name: Create OVS port (VXLAN)
   openvswitch_port:
@@ -104,9 +130,9 @@
     state: present 
     set: "Interface {{ opflex_integration_bridge }}_vxlan0 type=vxlan options:remote_ip=flow options:dst_port=8472"
   when:
-    - (neutron_services['opflex-neutron-agent']['group'] in group_names) and (neutron_vxlan_enabled | bool)
+    - (neutron_services['opflex-ovs-agent']['group'] in group_names) and (neutron_vxlan_enabled | bool)
   tags:
-    - opflex_config
+    - opflex-config
 
 - name: Create OVS port (VLAN)
   openvswitch_port:
@@ -114,6 +140,6 @@
     port: "{{ opflex_vlan_trunk_iface }}"
     state: present 
   when:
-    - (neutron_services['opflex-neutron-agent']['group'] in group_names) and (not neutron_vxlan_enabled | bool)
+    - (neutron_services['opflex-ovs-agent']['group'] in group_names) and (not neutron_vxlan_enabled | bool)
   tags:
-    - opflex_config
+    - opflex-config

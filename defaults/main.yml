@@ -41,6 +41,15 @@ calico_git_install_branch: '1.4.5'
 networking_calico_git_repo: https://git.openstack.org/openstack/networking-calico
 networking_calico_git_install_branch: master
 
+opflex_apic_ml2_driver_git_repo: https://github.com/noironetworks/apic-ml2-driver
+opflex_apic_ml2_driver_git_install_branch: '6.0.3'
+
+opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
+opflex_apic_api_git_install_branch: '1.0.16'
+
+opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
+opflex_agent_git_install_branch: '5.0.2'
+
 neutron_developer_mode: false
 neutron_developer_constraints:
   - "git+{{ neutron_git_repo }}@{{ neutron_git_install_branch }}#egg=neutron"
@@ -50,6 +59,9 @@ neutron_developer_constraints:
   - "git+{{ neutron_dynamic_routing_git_repo }}@{{ neutron_dynamic_routing_git_install_branch }}#egg=neutron-dynamic-routing"
   - "git+{{ calico_git_repo }}@{{ calico_git_install_branch }}#egg=felix"
   - "git+{{ networking_calico_git_repo }}@{{ networking_calico_git_install_branch }}#egg=networking-calico"
+  - "git+{{ opflex_apic_ml2_driver_git_repo }}@{{ opflex_apic_ml2_driver_git_install_branch }}#egg=neutron-ml2-driver-apic"
+  - "git+{{ opflex_apic_api_git_repo }}@{{ opflex_apic_api_git_install_branch }}#egg=apicapi"
+  - "git+{{ opflex_agent_git_repo }}@{{ opflex_agent_git_install_branch }}#egg=neutron-opflex-agent"
 
 # Name of the virtual env to deploy into
 neutron_venv_tag: untagged
@@ -371,7 +383,6 @@ neutron_services:
    group: neutron_opflex_apic_agent
    service_name: neutron-cisco-apic-host-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_override: "/usr/bin/neutron-cisco-apic-host-agent"
    config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini --log-file=/var/log/neutron/cisco-apic-host-agent.log"
    init_config_overrides: "{{ neutron_opflex_apic_agent_init_overrides }}"
    start_order: 2
@@ -379,24 +390,23 @@ neutron_services:
    group: neutron_opflex_agent
    service_name: neutron-opflex-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_override: "/usr/bin/neutron-opflex-agent"
-   config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugin.ini --log-file=/var/log/neutron/opflex-agent.log"
+   config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf.ini --log-file=/var/log/neutron/opflex-agent.log"
    init_config_overrides: "{{ neutron_opflex_agent_init_overrides }}"
    start_order: 2
  opflex-ovs-agent:
-   group: neutron_opflex_agent
+   group: neutron_opflex_ovs_agent
    service_name: agent-ovs
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_override: "/usr/bin/agent_ovs"
+   program_binary: agent_ovs
    config_options: "--syslog -c {{ opflex_agent_ovs_conf_dir }}/opflex-agent-ovs.conf -c {{ opflex_agent_ovs_conf_dir }}/conf.d"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"
    start_order: 2
  opflex-mcast-agent:
-   group: neutron_opflex_agent
+   group: neutron_opflex_ovs_agent
    service_name: mcast-daemon
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_override: "/usr/bin/mcast_daemon"
+   program_binary: mcast_daemon
    config_options: "--syslog"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_mcast_agent_init_overrides }}"
@@ -642,6 +652,11 @@ neutron_proprietary_nuage_pip_packages:
   - nuage-openstack-neutron
   - nuage-openstack-neutronclient
   - nuagenetlib
+
+neutron_proprietary_opflex_pip_packages:
+  - apicapi
+  - neutron-ml2-driver-apic
+  - neutron-opflex-agent
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
