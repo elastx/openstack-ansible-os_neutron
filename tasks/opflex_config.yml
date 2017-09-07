@@ -55,15 +55,6 @@
     - opflex-install
     - opflex-pip-packages
 
-- name: Changing group for /usr/sbin/lldpcli to neutron system group
-  file:
-    dest: "/usr/sbin/lldpcli"
-    group: "{{ neutron_system_group_name }}"
-  when:
-    - neutron_services['opflex-apic-agent']['group'] in group_names
-  tags:
-    - opflex-install
-
 - name: Copy dhclient config
   template:
     src: "dhclient.conf.j2"
@@ -102,6 +93,15 @@
     - neutron_services['neutron-server']['group'] in group_names
   tags:
     - opflex-config
+
+- name: Change group for /usr/sbin/lldpcli to neutron system group
+  file:
+    dest: "/usr/sbin/lldpcli"
+    group: "{{ neutron_system_group_name }}"
+  when:
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
+  tags:
+    - opflex-install
 
 - name: Copy opflex ovs agent config
   config_template:
