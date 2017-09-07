@@ -60,8 +60,8 @@ neutron_proprietary_opflex_packages: |-
   {% if (neutron_services['neutron-server']['group'] in group_names and opflex_gbp_enabled | bool) %}
   {%   set _ = packages.extend(opflex_distro_gbp_packages) %}
   {% endif %}
-  {% if (neutron_services['opflex-neutron-agent']['group'] in group_names and neutron_services['opflex-neutron-agent'].service_en | bool) %}
-  {%   set _ = packages.extend(opflex_distro_agent_packages) %}
+  {% if (neutron_services['opflex-ovs-agent']['group'] in group_names and neutron_services['opflex-neutron-agent'].service_en | bool) %}
+  {%   set _ = packages.extend(opflex_ovs_agent_packages) %}
   {% endif %}
   {{ packages }}
 

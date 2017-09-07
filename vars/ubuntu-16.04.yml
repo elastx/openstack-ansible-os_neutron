@@ -58,7 +58,7 @@ opflex_distro_gbp_packages:
   - group-based-policy-ui
   - python-group-based-policy-client
 
-opflex_distro_agent_packages:
+opflex_ovs_agent_packages:
   - agent-ovs
   - lldpd
 

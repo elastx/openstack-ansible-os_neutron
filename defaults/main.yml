@@ -380,7 +380,7 @@ neutron_services:
    init_config_overrides: "{{ neutron_sriov_nic_agent_init_overrides }}"
    start_order: 3
  opflex-apic-agent:
-   group: neutron_opflex_apic_agent
+   group: neutron_opflex_ovs_agent
    service_name: neutron-cisco-apic-host-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini --log-file=/var/log/neutron/cisco-apic-host-agent.log"
