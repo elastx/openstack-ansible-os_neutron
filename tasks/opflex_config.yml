@@ -58,7 +58,7 @@
 - name: Changing group for /usr/sbin/lldpcli to neutron system group
   file:
     dest: "/usr/sbin/lldpcli"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
+    group: "{{ neutron_system_group_name }}"
   when:
     - neutron_services['opflex-apic-agent']['group'] in group_names
   tags:
