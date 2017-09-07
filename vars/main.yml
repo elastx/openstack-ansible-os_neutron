@@ -64,7 +64,7 @@ neutron_proprietary_opflex_packages: |-
   {% endif %}
   {{ packages }}
 
-neutron_proprietary_opflex_pip_packages:
+neutron_proprietary_opflex_pip_packages: |-
   {% set packages = neutron_proprietary_opflex_common_pip_packages %}
   {% if (neutron_services['neutron-server']['group'] in group_names) %}
   {%   set _ = packages.extend(neutron_proprietary_opflex_server_pip_packages) %}
