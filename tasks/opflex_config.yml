@@ -65,9 +65,9 @@
   tags:
     - opflex-config
 
-- name: Release and send DHCP request on apic interface
+- name: Cycle apic interface
   shell: |
-    dhclient -r {{ opflex_uplink_iface }} && dhclient {{ opflex_uplink_iface }}
+    ifdown {{ opflex_uplink_iface }} && ifup {{ opflex_uplink_iface }}
   tags:
     - opflex-config
 
