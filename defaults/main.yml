@@ -55,12 +55,14 @@ group_based_policy_client_git_install_branch: stable/newton
 
 opflex_apic_ml2_driver_git_repo: https://github.com/noironetworks/apic-ml2-driver
 opflex_apic_ml2_driver_git_install_branch: '6.0.3'
+opflex_apic_ml2_driver_git_package_name: neutron-ml2-driver-apic
 
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: '1.0.16'
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
 opflex_agent_git_install_branch: '5.0.2'
+opflex_agent_git_package_name: neutron-opflex-agent
 
 neutron_developer_mode: false
 neutron_developer_constraints:
