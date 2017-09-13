@@ -64,9 +64,3 @@ neutron_proprietary_opflex_packages: |-
   {%   set _ = packages.extend(opflex_ovs_agent_packages) %}
   {% endif %}
   {{ packages }}
-
-neutron_proprietary_opflex_pip_packages:
-  - apicapi
-  - neutron-ml2-driver-apic
-  - neutron-opflex-agent
-  - pyOpenSSL

@@ -38,7 +38,7 @@
 
 - name: Install opflex pip packages
   pip:
-    name: "{{ neutron_proprietary_opflex_pip_packages | join(' ') }}"
+    name: "{{ neutron_optional_opflex_pip_packages | join(' ') }}"
     state: latest
     virtualenv: "{{ neutron_bin | dirname }}"
     virtualenv_site_packages: "no"

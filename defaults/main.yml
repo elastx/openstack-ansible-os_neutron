@@ -41,6 +41,18 @@ calico_git_install_branch: '1.4.5'
 networking_calico_git_repo: https://git.openstack.org/openstack/networking-calico
 networking_calico_git_install_branch: master
 
+group_based_policy_git_repo: https://git.openstack.org/openstack/group-based-policy
+group_based_policy_git_install_branch: stable/newton
+
+group_based_policy_automation_git_repo: https://git.openstack.org/openstack/group-based-policy-automation
+group_based_policy_automation_git_install_branch: stable/newton
+
+group_based_policy_ui_git_repo: https://git.openstack.org/openstack/group-based-policy-ui
+group_based_policy_ui_git_install_branch: stable/newton
+
+group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-group-based-policy-client
+group_based_policy_client_git_install_branch: stable/newton
+
 opflex_apic_ml2_driver_git_repo: https://github.com/noironetworks/apic-ml2-driver
 opflex_apic_ml2_driver_git_install_branch: '6.0.3'
 
@@ -59,6 +71,10 @@ neutron_developer_constraints:
   - "git+{{ neutron_dynamic_routing_git_repo }}@{{ neutron_dynamic_routing_git_install_branch }}#egg=neutron-dynamic-routing"
   - "git+{{ calico_git_repo }}@{{ calico_git_install_branch }}#egg=felix"
   - "git+{{ networking_calico_git_repo }}@{{ networking_calico_git_install_branch }}#egg=networking-calico"
+  - "git+{{ group_based_policy_git_repo }}@{{ group_based_policy_git_install_branch }}#egg=group-based-policy"
+  - "git+{{ group_based_policy_automation_git_repo }}@{{ group_based_policy_automation_git_install_branch }}#egg=group-based-policy-automation"
+  - "git+{{ group_based_policy_ui_git_repo }}@{{ group_based_policy_ui_git_install_branch }}#egg=group-based-policy-ui"
+  - "git+{{ group_based_policy_client_git_repo }}@{{ group_based_policy_client_git_install_branch }}#egg=python-group-based-policy-client"
   - "git+{{ opflex_apic_ml2_driver_git_repo }}@{{ opflex_apic_ml2_driver_git_install_branch }}#egg=neutron-ml2-driver-apic"
   - "git+{{ opflex_apic_api_git_repo }}@{{ opflex_apic_api_git_install_branch }}#egg=apicapi"
   - "git+{{ opflex_agent_git_repo }}@{{ opflex_agent_git_install_branch }}#egg=neutron-opflex-agent"
@@ -652,6 +668,16 @@ neutron_proprietary_nuage_pip_packages:
   - nuage-openstack-neutron
   - nuage-openstack-neutronclient
   - nuagenetlib
+
+neutron_optional_opflex_pip_packages:
+  - apicapi
+  - group-based-policy
+  - group-based-policy-automation
+  - group-based-policy-ui
+  - python-group-based-policy-client
+  - neutron-ml2-driver-apic
+  - neutron-opflex-agent
+  - pyOpenSSL
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
