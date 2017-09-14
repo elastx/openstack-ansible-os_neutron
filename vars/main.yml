@@ -55,12 +55,12 @@ filtered_neutron_services: |-
 # based on whether the host is in the host group and the
 # service is enabled.
 #
-neutron_proprietary_opflex_packages: |-
+neutron_opflex_package_list: |-
   {% set packages = [] %}
-  {% if (neutron_services['neutron-server']['group'] in group_names and opflex_gbp_enabled | bool) %}
-  {%   set _ = packages.extend(opflex_distro_gbp_packages) %}
+  {% if neutron_services['opflex-neutron-agent']['group'] in group_names %}
+  {%   set _ = packages.extend(neutron_opflex_distro_agent_packages) %}
   {% endif %}
   {% if (neutron_services['opflex-ovs-agent']['group'] in group_names and neutron_services['opflex-neutron-agent'].service_en | bool) %}
-  {%   set _ = packages.extend(opflex_ovs_agent_packages) %}
+  {%   set _ = packages.extend(neutron_opflex_distro_ovs_agent_packages) %}
   {% endif %}
   {{ packages }}

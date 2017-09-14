@@ -21,20 +21,32 @@
   until: opflex_add_repo|success
   retries: 5
   delay: 2
-  when: 
+  when:
     - ansible_pkg_mgr == 'apt'
   tags:
     - opflex-install
+    - opflex-distro-packages
 
 - name: Install opflex distro packages
   package:
-    name: "{{ neutron_proprietary_opflex_packages }}"
+    name: "{{ neutron_opflex_package_list }}"
     state: "{{ neutron_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  when:
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
     - opflex-install
     - opflex-distro-packages
+
+- name: Change group for /usr/sbin/lldpcli to neutron system group
+  file:
+    dest: "/usr/sbin/lldpcli"
+    group: "{{ neutron_system_group_name }}"
+  when:
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
+  tags:
+    - opflex-install
 
 - name: Install opflex pip packages
   pip:
@@ -93,15 +105,6 @@
     - neutron_services['neutron-server']['group'] in group_names
   tags:
     - opflex-config
-
-- name: Change group for /usr/sbin/lldpcli to neutron system group
-  file:
-    dest: "/usr/sbin/lldpcli"
-    group: "{{ neutron_system_group_name }}"
-  when:
-    - neutron_services['opflex-ovs-agent']['group'] in group_names
-  tags:
-    - opflex-install
 
 - name: Copy opflex ovs agent config
   config_template:

@@ -674,9 +674,6 @@ neutron_proprietary_nuage_pip_packages:
 neutron_optional_opflex_pip_packages:
   - apicapi
   - group-based-policy
-  - group-based-policy-automation
-  - group-based-policy-ui
-  - python-group-based-policy-client
   - neutron-ml2-driver-apic
   - neutron-opflex-agent
   - pyOpenSSL
