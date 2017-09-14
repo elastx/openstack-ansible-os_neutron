@@ -33,8 +33,6 @@
     state: "{{ neutron_package_state }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
-  when:
-    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
     - opflex-install
     - opflex-distro-packages
@@ -47,6 +45,7 @@
     - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
     - opflex-install
+    - opflex-distro-packages
 
 - name: Install opflex pip packages
   pip:
