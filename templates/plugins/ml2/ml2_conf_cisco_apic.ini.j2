@@ -11,7 +11,7 @@ apic_hosts = {{ opflex_apic_hosts | join(',') }}
 apic_username = {{ opflex_apic_user }}
 apic_password = {{ opflex_apic_password }}
 apic_use_ssl = {{ opflex_apic_use_ssl | bool }}
-apic_name_mapping = {{ opflex_apic_name_mapping }}
+apic_name_mapping = use_name
 apic_sync_interval = 0
 apic_agent_report_interval = 30
 apic_agent_poll_interval = 2
@@ -25,10 +25,28 @@ integrated_topology_service = True
 
 network_constraints_filename = {{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini
 
-{% if opflex_gbp_enabled | bool %}
+{% if (opflex_gbp_enabled | bool) or (opflex_unified_mode_enabled | bool) %}
 [group_policy]
-policy_drivers = implicit_policy,apic
+policy_drivers = {% if opflex_unified_mode_enabled | bool %}aim_mapping{% elif opflex_gbp_enabled | bool %}implicit_policy,apic{% endif %}
+{% if opflex_unified_mode_enabled | bool %}
+extension_drivers = aim_extension,proxy_group
+{% endif %}
 [group_policy_implicit_policy]
 default_ip_pool = {{ opflex_default_ip_pool | default('192.168.0.0/16') }}
+
+{% endif %}
+
+{% if opflex_unified_mode_enabled | bool %}
+[apic_aim_auth]
+auth_plugin = v3password
+auth_url = {% for host in opflex_apic_hosts %}http{% if opflex_apic_use_ssl | bool %}s{% endif %}://{{ host }}:35357/v3/{% if not loop.last %},{% endif %}{% endfor %}
+username = {{ opflex_apic_user }}
+password = {{ opflex_apic_password }}
+user_domain_name = default
+project_domain_name = default
+project_name = admin
+
+[ml2_apic_aim]
+enable_optimized_metadata = True
 
 {% endif %}

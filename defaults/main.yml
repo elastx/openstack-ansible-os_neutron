@@ -44,24 +44,21 @@ networking_calico_git_install_branch: master
 group_based_policy_git_repo: https://git.openstack.org/openstack/group-based-policy
 group_based_policy_git_install_branch: stable/newton
 
-group_based_policy_automation_git_repo: https://git.openstack.org/openstack/group-based-policy-automation
-group_based_policy_automation_git_install_branch: stable/newton
-
-group_based_policy_ui_git_repo: https://git.openstack.org/openstack/group-based-policy-ui
-group_based_policy_ui_git_install_branch: stable/newton
-
 group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-group-based-policy-client
 group_based_policy_client_git_install_branch: stable/newton
 
+opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
+opflex_aci_integration_module_git_install_branch: 0.4.0
+
 opflex_apic_ml2_driver_git_repo: https://github.com/noironetworks/apic-ml2-driver
-opflex_apic_ml2_driver_git_install_branch: '6.0.3'
+opflex_apic_ml2_driver_git_install_branch: 6.0.3
 opflex_apic_ml2_driver_git_package_name: neutron-ml2-driver-apic
 
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
-opflex_apic_api_git_install_branch: '1.0.16'
+opflex_apic_api_git_install_branch: 1.0.16
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: '5.0.2'
+opflex_agent_git_install_branch: 5.0.2
 opflex_agent_git_package_name: neutron-opflex-agent
 
 neutron_developer_mode: false
@@ -74,9 +71,8 @@ neutron_developer_constraints:
   - "git+{{ calico_git_repo }}@{{ calico_git_install_branch }}#egg=felix"
   - "git+{{ networking_calico_git_repo }}@{{ networking_calico_git_install_branch }}#egg=networking-calico"
   - "git+{{ group_based_policy_git_repo }}@{{ group_based_policy_git_install_branch }}#egg=group-based-policy"
-  - "git+{{ group_based_policy_automation_git_repo }}@{{ group_based_policy_automation_git_install_branch }}#egg=group-based-policy-automation"
-  - "git+{{ group_based_policy_ui_git_repo }}@{{ group_based_policy_ui_git_install_branch }}#egg=group-based-policy-ui"
   - "git+{{ group_based_policy_client_git_repo }}@{{ group_based_policy_client_git_install_branch }}#egg=python-group-based-policy-client"
+  - "git+{{ opflex_aci_integration_module_git_repo }}@{{ opflex_aci_integration_module_git_install_branch }}#egg=aci_integration_module"
   - "git+{{ opflex_apic_ml2_driver_git_repo }}@{{ opflex_apic_ml2_driver_git_install_branch }}#egg=neutron-ml2-driver-apic"
   - "git+{{ opflex_apic_api_git_repo }}@{{ opflex_apic_api_git_install_branch }}#egg=apicapi"
   - "git+{{ opflex_agent_git_repo }}@{{ opflex_agent_git_install_branch }}#egg=neutron-opflex-agent"
@@ -221,10 +217,11 @@ neutron_plugins:
     driver_firewall: iptables_hybrid
     driver_interface: openvswitch
     drivers_type: "{{ neutron_ml2_drivers_type }}"
-    mechanisms: "{% if opflex_gbp_enabled | bool %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
+    mechanisms: "{% if opflex_unified_mode_enabled | bool %}apic_aim{% elif opflex_gbp_enabled | bool %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
     plugin_conf_ini_overrides: "{{ neutron_ml2_conf_ini_overrides }}"
-    plugin_core: ml2
+    plugin_core: "ml2{% if opflex_unified_mode_enabled | bool %}plus{%endif%}"
     plugin_ini: plugins/ml2/ml2_conf.ini
+
 
 neutron_dhcp_agent_init_overrides: {}
 neutron_openvswitch_agent_init_overrides: {}
@@ -428,6 +425,33 @@ neutron_services:
    config_options: "--syslog"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_mcast_agent_init_overrides }}"
+   start_order: 3
+ opflex-aim-aid:
+   group: neutron_opflex_aim_agent
+   service_name: aim-aid
+   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   program_binary: aim-aid
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-aid.log"
+   config_type: "ini"
+   init_config_overrides: "{{ neutron_opflex_aim_aid_init_overrides }}"
+   start_order: 3
+ opflex-aim-event-service-polling:
+   group: neutron_opflex_aim_agent
+   service_name: aim-event-service-polling
+   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   program_binary: aim-event-service-polling
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-polling.log"
+   config_type: "ini"
+   init_config_overrides: "{{ neutron_opflex_aim_event_service_polling_init_overrides }}"
+   start_order: 3
+ opflex-aim-event-service-rpc:
+   group: neutron_opflex_aim_agent
+   service_name: aim-event-service-rpc
+   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   program_binary: aim-event-service-rpc
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-rpc.log"
+   config_type: "ini"
+   init_config_overrides: "{{ neutron_opflex_aim_event_service_rpc_init_overrides }}"
    start_order: 3
 
 ## Neutron DHCP Agent
@@ -672,11 +696,13 @@ neutron_proprietary_nuage_pip_packages:
   - nuagenetlib
 
 neutron_optional_opflex_pip_packages:
+  - aci-integration-module
   - apicapi
   - group-based-policy
   - neutron-ml2-driver-apic
   - neutron-opflex-agent
   - pyOpenSSL
+  - python-group-based-policy-client
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
@@ -713,6 +739,11 @@ neutron_opflex_agent_init_overrides: {}
 neutron_opflex_apic_agent_init_overrides: {}
 neutron_opflex_ovs_agent_init_overrides: {}
 neutron_opflex_mcast_agent_init_overrides: {}
+neutron_opflex_aim_conf_ini_overrides: {}
+neutron_opflex_aimctl_conf_ini_overrides: {}
+neutron_opflex_aim_aid_init_overrides: {}
+neutron_opflex_aim_event_service_polling_init_overrides: {}
+neutron_opflex_aim_event_service_rpc_init_overrides: {}
 
 ###
 ### Opflex Configuration
@@ -720,6 +751,7 @@ neutron_opflex_mcast_agent_init_overrides: {}
 
 # See documentation section titled "Scenario - Using the OpFlex neutron plugin"
 opflex_gbp_enabled: false
+opflex_unified_mode_enabled: false
 opflex_integration_bridge: br-int
 opflex_uplink_iface: eth15
 opflex_uplink_vlan: 4093
@@ -735,4 +767,3 @@ opflex_apic_remote_ip: 10.0.0.32
 opflex_apic_user: opflex
 opflex_apic_password: opflex
 opflex_apic_use_ssl: True
-opflex_apic_name_mapping: use_name
