@@ -105,6 +105,18 @@
   tags:
     - opflex-config
 
+- name: Ensure aim config directory exists
+  file:
+    path: "/etc/aim"
+    state: directory
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "0640"
+  when:
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+  tags:
+    - opflex-aim-config
+
 - name: Copy aim service config
   config_template:
     src: "{{ item.src }}"
@@ -126,7 +138,7 @@
   when:
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
   tags:
-    - opflex-config
+    - opflex-aim-config
 
 - name: Perform aim init
   command: "{{ neutron_bin }}/aimctl db-migration upgrade head && {{ neutron_bin }}/aimctl config update"
