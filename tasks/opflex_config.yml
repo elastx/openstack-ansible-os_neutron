@@ -105,13 +105,27 @@
   tags:
     - opflex-config
 
-- name: Ensure aim config directory exists
+- name: Ensure aim config directory and log files exists
   file:
-    path: "/etc/aim"
-    state: directory
-    owner: "root"
-    group: "{{ neutron_system_group_name }}"
-    mode: "0755"
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    owner: "{{ item.owner|default(neutron_system_user_name) }}"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - path: /etc/aim
+      state: directory
+      owner: root
+      mode: "0755"
+    - path: /var/log/aim-aid.log
+      state: touch
+      mode: "0640"
+    - path: /var/log/aim-event-service-polling.log
+      state: touch
+      mode: "0640"
+    - path: /var/log/aim-event-service-rpc.log
+      state: touch
+      mode: "0640"
   when:
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
   tags:
