@@ -110,8 +110,8 @@
     path: "/etc/aim"
     state: directory
     owner: "root"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
-    mode: "0640"
+    group: "{{ neutron_system_group_name }}"
+    mode: "0755"
   when:
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
   tags:
@@ -140,8 +140,19 @@
   tags:
     - opflex-aim-config
 
-- name: Perform aim init
-  command: "{{ neutron_bin }}/aimctl db-migration upgrade head && {{ neutron_bin }}/aimctl config update"
+- name: Perform aim db upgrade
+  command: "{{ neutron_bin }}/aimctl db-migration upgrade head"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+  tags:
+    - opflex-aim-init
+
+- name: Perform aim config update
+  command: "{{ neutron_bin }}/aimctl config update"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
   when:
