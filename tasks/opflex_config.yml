@@ -66,6 +66,27 @@
     - opflex-install
     - opflex-pip-packages
 
+- name: Install opflex agent pip packages
+  pip:
+    name: "{{ neutron_optional_opflex_agent_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ neutron_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ neutron_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  notify: Restart neutron services
+  when:
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
+  tags:
+    - opflex-install
+    - opflex-agent-pip-packages
+
 - name: Copy dhclient config
   template:
     src: "dhclient.conf.j2"

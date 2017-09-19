@@ -700,9 +700,11 @@ neutron_optional_opflex_pip_packages:
   - apicapi
   - group-based-policy
   - neutron-ml2-driver-apic
-  - neutron-opflex-agent
   - pyOpenSSL
   - python-group-based-policy-client
+
+neutron_optional_opflex_agent_pip_packages:
+  - neutron-opflex-agent
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
