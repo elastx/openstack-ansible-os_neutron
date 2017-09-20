@@ -138,6 +138,9 @@
       state: directory
       owner: root
       mode: "0755"
+    - path: /run/aid/events
+      state: directory
+      mode: "0755"
     - path: /var/log/aim-aid.log
       state: touch
       mode: "0640"
