@@ -60,7 +60,7 @@ neutron_opflex_package_list: |-
   {% if neutron_services['opflex-neutron-agent']['group'] in group_names %}
   {%   set _ = packages.extend(neutron_opflex_distro_agent_packages) %}
   {% endif %}
-  {% if (neutron_services['opflex-ovs-agent']['group'] in group_names and neutron_services['opflex-neutron-agent'].service_en | bool) %}
+  {% if (neutron_services['opflex-ovs-agent']['group'] in group_names) %}
   {%   set _ = packages.extend(neutron_opflex_distro_ovs_agent_packages) %}
   {% endif %}
   {{ packages }}

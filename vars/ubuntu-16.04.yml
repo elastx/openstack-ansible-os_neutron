@@ -56,6 +56,8 @@ neutron_opflex_distro_agent_packages:
   - lldpd
 neutron_opflex_distro_ovs_agent_packages:
   - agent-ovs
+  - openvswitch-common
+  - openvswitch-switch
 
 opflex_apt_repo_url: "http://localhost/ubuntu"
 opflex_repo:

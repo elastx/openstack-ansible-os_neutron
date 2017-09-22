@@ -412,7 +412,9 @@ neutron_services:
    group: neutron_opflex_ovs_agent
    service_name: agent-ovs
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_binary: agent_ovs
+   system_user: root
+   system_group: root
+   program_override: /usr/bin/agent_ovs
    config_options: "--syslog -c {{ opflex_agent_ovs_conf_dir }}/opflex-agent-ovs.conf -c {{ opflex_agent_ovs_conf_dir }}/conf.d"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"
@@ -421,7 +423,9 @@ neutron_services:
    group: neutron_opflex_ovs_agent
    service_name: mcast-daemon
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-   program_binary: mcast_daemon
+   system_user: root
+   system_group: root
+   program_override: /usr/bin/mcast_daemon
    config_options: "--syslog"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_mcast_agent_init_overrides }}"

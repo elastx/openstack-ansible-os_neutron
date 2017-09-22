@@ -121,8 +121,6 @@
       dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
       config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
       config_type: "ini"
-  when:
-    - neutron_services['neutron-server']['group'] in group_names
   tags:
     - opflex-config
 
