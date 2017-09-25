@@ -37,10 +37,11 @@
     - opflex-install
     - opflex-distro-packages
 
-- name: Change group for /usr/sbin/lldpcli to neutron system group
-  file:
-    dest: "/usr/sbin/lldpcli"
-    group: "{{ neutron_system_group_name }}"
+- name: Add neutron user to _lldpd group
+  user:
+    name: "{{ neutron_system_user_name }}"
+    groups: _lldpd
+    append: yes
   when:
     - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
