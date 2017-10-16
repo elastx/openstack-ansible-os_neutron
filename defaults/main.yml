@@ -773,3 +773,4 @@ opflex_apic_remote_ip: 10.0.0.32
 opflex_apic_user: opflex
 opflex_apic_password: opflex
 opflex_apic_use_ssl: True
+opflex_apic_vmdom: ostack
