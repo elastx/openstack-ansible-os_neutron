@@ -1,12 +1,11 @@
 # {{ ansible_managed }}
 [DEFAULT]
 debug = {{ debug }}
-rpc_backend = rabbit
-control_exchange = neutron
-default_log_levels = neutron.context=ERROR
-transport_url = rabbit://{% for host in neutron_rabbitmq_servers.split(',') %}{{ neutron_rabbitmq_userid }}:{{ neutron_rabbitmq_password }}@{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ neutron_rabbitmq_vhost }}{% endif %}{% endfor %}
 
 [oslo_messaging_rabbit]
+rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
+rabbit_userid = {{ neutron_rabbitmq_userid }}
+rabbit_password = {{ neutron_rabbitmq_password }}
 rabbit_use_ssl = {{ neutron_rabbitmq_use_ssl }}
 rpc_conn_pool_size = {{ neutron_rpc_conn_pool_size }}
 
@@ -19,7 +18,7 @@ pool_timeout = {{ neutron_db_pool_timeout }}
 [aim]
 agent_down_time = 75
 poll_config = False
-aim_system_id = openstack_aid
+aim_system_id = {{ opflex_apic_system_id }}
 max_operation_retry = 5
 
 [apic]
@@ -27,3 +26,4 @@ apic_hosts = {{ opflex_apic_hosts | join(',') }}
 apic_username = {{ opflex_apic_user }}
 apic_password = {{ opflex_apic_password }}
 apic_use_ssl = {{ opflex_apic_use_ssl | bool }}
+scope_names = False

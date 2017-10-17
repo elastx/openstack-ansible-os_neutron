@@ -217,9 +217,9 @@ neutron_plugins:
     driver_firewall: iptables_hybrid
     driver_interface: openvswitch
     drivers_type: "{{ neutron_ml2_drivers_type }}"
-    mechanisms: "{% if opflex_unified_mode_enabled | bool %}apic_aim{% elif opflex_gbp_enabled | bool %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
+    mechanisms: "{% if opflex_plugin_mode == 'unified' %}apic_aim{% elif opflex_plugin_mode == 'gbp' %}apic_gbp{% else %}cisco_apic_ml2{% endif %}"
     plugin_conf_ini_overrides: "{{ neutron_ml2_conf_ini_overrides }}"
-    plugin_core: "ml2{% if opflex_unified_mode_enabled | bool %}plus{%endif%}"
+    plugin_core: "ml2{% if opflex_plugin_mode == 'unified' %}plus{%endif%}"
     plugin_ini: plugins/ml2/ml2_conf.ini
 
 
@@ -433,7 +433,7 @@ neutron_services:
  opflex-aim-aid:
    group: neutron_opflex_aim_agent
    service_name: aim-aid
-   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   service_en: "{{ opflex_plugin_mode == 'unified' }}"
    program_binary: aim-aid
    config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-aid.log"
    config_type: "ini"
@@ -442,7 +442,7 @@ neutron_services:
  opflex-aim-event-service-polling:
    group: neutron_opflex_aim_agent
    service_name: aim-event-service-polling
-   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   service_en: "{{ opflex_plugin_mode == 'unified' }}"
    program_binary: aim-event-service-polling
    config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-polling.log"
    config_type: "ini"
@@ -451,7 +451,7 @@ neutron_services:
  opflex-aim-event-service-rpc:
    group: neutron_opflex_aim_agent
    service_name: aim-event-service-rpc
-   service_en: "{{ opflex_unified_mode_enabled | bool }}"
+   service_en: "{{ opflex_plugin_mode == 'unified' }}"
    program_binary: aim-event-service-rpc
    config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-rpc.log"
    config_type: "ini"
@@ -756,15 +756,14 @@ neutron_opflex_aim_event_service_rpc_init_overrides: {}
 ###
 
 # See documentation section titled "Scenario - Using the OpFlex neutron plugin"
-opflex_gbp_enabled: false
-opflex_unified_mode_enabled: false
+opflex_plugin_mode: ml2
 opflex_integration_bridge: br-int
 opflex_uplink_iface: eth15
 opflex_uplink_vlan: 4093
 opflex_vlan_trunk_iface: eth11
 opflex_agent_ovs_conf_dir: /etc/opflex-agent-ovs
 
-opflex_apic_system_id: ""
+opflex_apic_system_id: "openstack"
 opflex_apic_hosts:
   - 10.0.0.1
   - 10.0.0.2

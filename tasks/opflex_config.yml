@@ -152,7 +152,7 @@
       state: touch
       mode: "0640"
   when:
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-config
 
@@ -175,7 +175,7 @@
       config_overrides: "{{ neutron_opflex_aimctl_conf_ini_overrides }}"
       config_type: "ini"
   when:
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-config
 
@@ -186,7 +186,7 @@
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-init
 
@@ -197,7 +197,7 @@
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-init
 
@@ -208,7 +208,7 @@
     option: "need_aim_init"
     value: "False"
   when:
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-init
 
@@ -217,7 +217,7 @@
     filter: ansible_local
     gather_subset: "!all"
   when:
-    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_unified_mode_enabled | bool)
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
   tags:
     - opflex-aim-init
 
