@@ -67,6 +67,27 @@
     - opflex-install
     - opflex-pip-packages
 
+- name: Install opflex gbp and unified pip packages
+  pip:
+    name: "{{ neutron_optional_opflex_unified_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ neutron_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ neutron_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  notify: Restart neutron services
+  when:
+    - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
+  tags:
+    - opflex-install
+    - opflex-unified-pip-packages
+
 - name: Install opflex agent pip packages
   pip:
     name: "{{ neutron_optional_opflex_agent_pip_packages | join(' ') }}"
@@ -231,7 +252,7 @@
     config_overrides: "{{ item.config_overrides }}"
     config_type: "{{ item.config_type }}"
   with_items:
-    - src: "opflex-agent-ovs/opflex-agent-ovs.conf.j2"
+    - src: "opflex-agent-ovs.conf.j2"
       dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
       config_overrides: "{{ neutron_opflex_agent_ovs_json_overrides }}"
       config_type: "json"

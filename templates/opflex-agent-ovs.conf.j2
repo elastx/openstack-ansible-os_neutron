@@ -3,18 +3,16 @@
         "domain": "comp/prov-OpenStack/ctrlr-[{{ opflex_apic_system_id }}>]-{{ opflex_apic_system_id }}/sw-InsiemeLSOid",
         "name": "{{ inventory_hostname }}",
         "peers": [
-            {"hostname": "{{ opflex_apic_peer_svi }}", "port": 8009}
+            {"hostname": "{{ opflex_apic_peer_svi }}", "port": "{{ opflex_apic_peer_port }}"}
         ],
         "ssl": {
             "mode": "encrypted",
             "ca-store": "/etc/ssl/certs"
         },
-
         "inspector": {
             "enabled": true,
             "socket-name": "/var/run/opflex-agent-ovs-inspect.sock"
         },
-
         "notif": {
             "enabled": true,
             "socket-name": "/var/run/opflex-agent-ovs-notif.sock",

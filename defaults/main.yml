@@ -700,15 +700,17 @@ neutron_proprietary_nuage_pip_packages:
   - nuagenetlib
 
 neutron_optional_opflex_pip_packages:
-  - aci-integration-module
   - apicapi
-  - group-based-policy
   - neutron-ml2-driver-apic
   - pyOpenSSL
-  - python-group-based-policy-client
 
 neutron_optional_opflex_agent_pip_packages:
   - neutron-opflex-agent
+
+neutron_optional_opflex_unified_pip_packages:
+  - aci-integration-module
+  - group-based-policy
+  - python-group-based-policy-client
 
 # This variable is used by the repo_build process to determine
 # which host group to check for members of before building the
@@ -768,6 +770,7 @@ opflex_apic_hosts:
   - 10.0.0.1
   - 10.0.0.2
 opflex_apic_peer_svi: 10.0.0.30
+opflex_apic_peer_port: 8009
 opflex_apic_remote_ip: 10.0.0.32
 opflex_apic_user: opflex
 opflex_apic_password: opflex
