@@ -14,7 +14,7 @@ vlan_ranges = {{ neutron_provider_networks.network_vlan_ranges }}
 [apic]
 apic_arp_flooding = False
 apic_clear_node_profiles = True
-apic_entity_profile =
+apic_entity_profile = {{ opflex_apic_system_id }}
 apic_name_mapping = use_uuid
 apic_provision_infra = False
 apic_provision_hostlinks = False
@@ -22,3 +22,4 @@ enable_aci_routing = True
 enable_optimized_dhcp = True
 enable_optimized_metadata = True
 scope_infra = False
+scope_names = False
