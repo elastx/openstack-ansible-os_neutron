@@ -254,7 +254,7 @@
   with_items:
     - src: "opflex-agent-ovs.conf.j2"
       dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
-      config_overrides: "{{ neutron_opflex_agent_ovs_json_overrides }}"
+      config_overrides: "{{ neutron_opflex_ovs_agent_json_overrides }}"
       config_type: "json"
   when:
     - neutron_services['opflex-ovs-agent']['group'] in group_names

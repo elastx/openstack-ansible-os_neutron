@@ -395,7 +395,7 @@ neutron_services:
    init_config_overrides: "{{ neutron_sriov_nic_agent_init_overrides }}"
    start_order: 3
  opflex-apic-agent:
-   group: neutron_opflex_ovs_agent
+   group: neutron_opflex_agent
    service_name: neutron-cisco-apic-host-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    config_options: "--config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini --log-file=/var/log/neutron/cisco-apic-host-agent.log"
@@ -409,7 +409,7 @@ neutron_services:
    init_config_overrides: "{{ neutron_opflex_agent_init_overrides }}"
    start_order: 2
  opflex-ovs-agent:
-   group: neutron_opflex_ovs_agent
+   group: neutron_opflex_agent
    service_name: agent-ovs
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    system_user: root
@@ -420,7 +420,7 @@ neutron_services:
    init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"
    start_order: 2
  opflex-mcast-agent:
-   group: neutron_opflex_ovs_agent
+   group: neutron_opflex_agent
    service_name: mcast-daemon
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    system_user: root
@@ -742,10 +742,10 @@ neutron_calico_felix_ini_overrides: {}
 neutron_sriov_nic_agent_ini_overrides: {}
 neutron_opflex_ml2_conf_ini_overrides: {}
 neutron_opflex_network_constraints_ini_overrides: {}
-neutron_opflex_agent_ovs_json_overrides: {}
 neutron_opflex_agent_init_overrides: {}
 neutron_opflex_apic_agent_init_overrides: {}
 neutron_opflex_ovs_agent_init_overrides: {}
+neutron_opflex_ovs_agent_json_overrides: {}
 neutron_opflex_mcast_agent_init_overrides: {}
 neutron_opflex_aim_conf_ini_overrides: {}
 neutron_opflex_aimctl_conf_ini_overrides: {}
