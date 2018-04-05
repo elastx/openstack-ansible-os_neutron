@@ -776,3 +776,4 @@ opflex_apic_user: opflex
 opflex_apic_password: opflex
 opflex_apic_use_ssl: True
 opflex_apic_vmdom: ostack
+opflex_apic_entity_profile: ostack_entity
