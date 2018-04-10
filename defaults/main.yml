@@ -48,17 +48,17 @@ group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-g
 group_based_policy_client_git_install_branch: stable/newton
 
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
-opflex_aci_integration_module_git_install_branch: 0.4.0
+opflex_aci_integration_module_git_install_branch: 0.6.0
 
 opflex_apic_ml2_driver_git_repo: https://github.com/noironetworks/apic-ml2-driver
-opflex_apic_ml2_driver_git_install_branch: 6.0.3
+opflex_apic_ml2_driver_git_install_branch: 6.1.0
 opflex_apic_ml2_driver_git_package_name: neutron-ml2-driver-apic
 
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
-opflex_apic_api_git_install_branch: 1.0.16
+opflex_apic_api_git_install_branch: 1.1.0
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 5.0.2
+opflex_agent_git_install_branch: 5.1.0
 opflex_agent_git_package_name: neutron-opflex-agent
 
 neutron_developer_mode: false
@@ -759,7 +759,8 @@ neutron_opflex_aim_event_service_rpc_init_overrides: {}
 
 # See documentation section titled "Scenario - Using the OpFlex neutron plugin"
 opflex_plugin_mode: ml2
-opflex_integration_bridge: br-int
+opflex_integration_bridge: br-fabric
+opflex_access_bridge: br-int
 opflex_uplink_iface: eth15
 opflex_uplink_vlan: 4093
 opflex_vlan_trunk_iface: eth11

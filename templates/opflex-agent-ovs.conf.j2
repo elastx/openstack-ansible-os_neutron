@@ -32,6 +32,7 @@
     "renderers": {
         "stitched-mode": {
             "int-bridge-name": "{{ opflex_integration_bridge }}",
+            "access-bridge-name": "{{ opflex_access_bridge }}",
             
             "encap": {
                 {% if neutron_vxlan_enabled | bool %}"vxlan" : {
