@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 [DEFAULT]
 debug = {{ debug }}
+rpc_backend = {{ neutron_rpc_backend }}
 
 [oslo_messaging_rabbit]
 rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
