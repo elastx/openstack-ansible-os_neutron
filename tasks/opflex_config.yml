@@ -175,7 +175,7 @@
     filter: ansible_local
     gather_subset: "!all"
   when:
-    - (neutron_services['opflex-gbp-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
+    - (neutron_services['neutron-server']['group'] in group_names) and ((opflex_plugin_mode == 'unified') or (opflex_plugin_mode == 'gbp'))
   tags:
     - opflex-gbp-init
 
