@@ -9,6 +9,7 @@ rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{
 rabbit_userid = {{ neutron_rabbitmq_userid }}
 rabbit_password = {{ neutron_rabbitmq_password }}
 rabbit_use_ssl = {{ neutron_rabbitmq_use_ssl }}
+rabbit_virtual_host = {{ neutron_rabbitmq_vhost }}
 rpc_conn_pool_size = {{ neutron_rpc_conn_pool_size }}
 
 [database]
