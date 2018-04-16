@@ -5,6 +5,7 @@ rpc_backend = {{ neutron_rpc_backend }}
 
 [oslo_messaging_rabbit]
 rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
+
 rabbit_userid = {{ neutron_rabbitmq_userid }}
 rabbit_password = {{ neutron_rabbitmq_password }}
 rabbit_use_ssl = {{ neutron_rabbitmq_use_ssl }}
