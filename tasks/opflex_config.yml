@@ -304,6 +304,25 @@
   tags:
     - opflex-aim-init
 
+# python-opflex-agent hard-codes command paths in their supervisord config
+# See https://github.com/noironetworks/python-opflex-agent/blob/e28e681d9915b691002e6a429e69f50c8f0052ba/opflexagent/as_metadata_manager.py#L662
+#
+- name: Create symlinks for optimized metadata and dhcp
+  file:
+    src: "{{ neutron_bin }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    state: link
+  with_items:
+    - neutron-metadata-agent
+    - opflex-ep-watcher
+    - opflex-state-watcher
+  when:
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
+  tags:
+    - opflex-config
+
 - name: Copy opflex ovs agent config
   config_template:
     src: "{{ item.src }}"
