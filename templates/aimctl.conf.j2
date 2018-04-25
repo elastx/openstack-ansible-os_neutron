@@ -7,7 +7,7 @@ apic_system_id = {{ opflex_apic_system_id }}
 encap_mode = vxlan
 {% else %}
 encap_mode = vlan
-vlan_ranges = {{ neutron_provider_networks.network_vlan_ranges }}
+vlan_ranges = {{ neutron_provider_networks.network_vlan_ranges.split(':')[1:3] | join(':') }}
 {% endif %}
 
 
