@@ -49,12 +49,6 @@ opflex-ovs-agent hosts group containing all compute hosts.
     neutron_agent:
       belongs_to:
         - neutron_all
-    neutron_dhcp_agent:
-      belongs_to:
-        - neutron_all
-    neutron_openvswitch_agent:
-      belongs_to:
-        - neutron_all
     neutron_metering_agent:
       belongs_to:
         - neutron_all
@@ -71,15 +65,12 @@ opflex-ovs-agent hosts group containing all compute hosts.
       belongs_to:
         - neutron_all
 
-
   container_skel:
     neutron_opflex_ovs_container:
       belongs_to:
         - compute_containers
       contains:
-        - neutron_openvswitch_agent
         - neutron_opflex_agent
-        - neutron_opflex_ovs_agent
       properties:
         is_metal: true
         service_name: neutron
@@ -88,7 +79,6 @@ opflex-ovs-agent hosts group containing all compute hosts.
         - network_containers
       contains:
         - neutron_agent
-        - neutron_dhcp_agent
         - neutron_metering_agent
       properties:
         service_name: neutron
@@ -97,9 +87,9 @@ opflex-ovs-agent hosts group containing all compute hosts.
         - network_containers
       contains:
         - neutron_server
+        - neutron_opflex_aim_agent
       properties:
         service_name: neutron
-
 
   physical_skel:
     network_containers:
@@ -153,8 +143,10 @@ Set the following in ``/etc/openstack_deploy/user_variables.yml``.
 
   # Add cisco_apic_l3 to plugin base
   neutron_plugin_base:
-    - cisco_apic_l3
+    - apic_aim_l3
+    - group_policy
     - metering
+    - ncp
 
   # Override openvswitch config variables
   neutron_openvswitch_agent_ini_overrides:
@@ -166,7 +158,13 @@ Set the following in ``/etc/openstack_deploy/user_variables.yml``.
       tunnel_types:
 
   neutron_provider_networks:
-    network_types: "vxlan"
+    network_types: "unified"
+
+  neutron_ml2_conf_ini_overrides:
+    ml2:
+      extension_drivers: apic_aim
+      mechanism_drivers: apic_aim
+
 
   opflex_apic_hosts:
     - 100.100.0.1
