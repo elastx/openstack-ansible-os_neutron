@@ -259,6 +259,8 @@
       config_type: "ini"
   when:
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
+  register:
+    - aim_config
   tags:
     - opflex-aim-config
 
@@ -278,9 +280,9 @@
   become: yes
   become_user: "{{ neutron_system_user_name }}"
   when:
-    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
+    - aim_config | changed
   tags:
     - opflex-aim-init
 
