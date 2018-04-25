@@ -471,7 +471,7 @@ neutron_services:
 neutron_dhcp: "{% if neutron_plugin_type.split('.')[0] == 'ml2' %}True{% else %}False{% endif %}"
 
 ## Neutron Metadata Agent
-neutron_metadata: "{% if neutron_plugin_type.split('.')[0] == 'ml2' and (neutron_plugin_type == 'ml2.ovs.dvr' or neutron_plugin_type == 'ml2.opflex' or 'nova_compute' not in group_names) %}True{% else %}False{% endif %}"
+neutron_metadata: "{% if neutron_plugin_type.split('.')[0] == 'ml2' and (neutron_plugin_type == 'ml2.ovs.dvr' or 'nova_compute' not in group_names) %}True{% else %}False{% endif %}"
 
 ## Neutron LBaaS
 # See documentation section titled "Configuring the Network Load Balancing

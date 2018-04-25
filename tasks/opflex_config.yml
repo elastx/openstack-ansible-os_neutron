@@ -354,6 +354,24 @@
   tags:
     - opflex-config
 
+- name: Generate metadata-agent config
+  config_template:
+    src: "{{ item.service_conf }}.j2"
+    dest: "{{ item.service_conf_path }}/{{ item.service_conf }}"
+    owner: "root"
+    group: "{{ neutron_system_group_name }}"
+    mode: "0640"
+    config_overrides: "{{ item.config_overrides }}"
+    config_type: "{{ item.config_type }}"
+  with_items: "{{ neutron_services.neutron-metadata-agent }}"
+  notify:
+    - Restart neutron services
+  when:
+    - "'service_conf_path' in item"
+    - "'service_conf' in item"
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
+    - not neutron_metadata | bool
+
 - name: Create OVS integration bridge
   openvswitch_bridge:
     bridge: "{{ opflex_integration_bridge }}"
