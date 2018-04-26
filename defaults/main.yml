@@ -441,8 +441,6 @@ neutron_services:
    service_name: mcast-daemon
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    service_rootwrap: rootwrap.d/gbp-opflex.filters
-   system_user: root
-   system_group: root
    program_override: /usr/bin/mcast_daemon
    config_options: "--syslog"
    config_type: "ini"
