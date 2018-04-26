@@ -37,11 +37,20 @@
     - opflex-install
     - opflex-distro-packages
 
-- name: Add neutron user to _lldpd group
+- name: Create the opflexep group
+  group:
+    name: "opflexep"
+    state: "present"
+    system: "yes"
+
+- name: Add neutron user to _lldpd and opflexep group
   user:
     name: "{{ neutron_system_user_name }}"
-    groups: _lldpd
+    groups: "{{ item }}"
     append: yes
+  with_items:
+    - _lldpd
+    - opflexep
   when:
     - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
@@ -259,8 +268,7 @@
       config_type: "ini"
   when:
     - (neutron_services['opflex-aim-aid']['group'] in group_names) and (opflex_plugin_mode == 'unified')
-  register:
-    - aim_config
+  register: aim_config
   tags:
     - opflex-aim-config
 
@@ -358,21 +366,18 @@
 
 - name: Generate metadata-agent config
   config_template:
-    src: "{{ item.service_conf }}.j2"
-    dest: "{{ item.service_conf_path }}/{{ item.service_conf }}"
+    src: "{{ neutron_services['neutron-metadata-agent']['service_conf'] }}.j2"
+    dest: "{{ neutron_services['neutron-metadata-agent']['service_conf_path'] }}/{{ neutron_services['neutron-metadata-agent']['service_conf'] }}"
     owner: "root"
     group: "{{ neutron_system_group_name }}"
     mode: "0640"
-    config_overrides: "{{ item.config_overrides }}"
-    config_type: "{{ item.config_type }}"
-  with_items: "{{ neutron_services.neutron-metadata-agent }}"
+    config_overrides: "{{neutron_services['neutron-metadata-agent']['config_overrides'] }}"
+    config_type: "{{ neutron_services['neutron-metadata-agent']['config_type'] }}"
   notify:
     - Restart neutron services
   when:
-    - "'service_conf_path' in item"
-    - "'service_conf' in item"
-    - neutron_services['opflex-ovs-agent']['group'] in group_names
-    - not neutron_metadata | bool
+    - "not neutron_services['neutron-metadata-agent']['service_conf'] | bool"
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
 
 - name: Create OVS integration bridge
   openvswitch_bridge:
