@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+[DEFAULT]
+debug = {{ debug }}
+rpc_backend = {{ neutron_rpc_backend }}
+
+[oslo_messaging_rabbit]
+rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
+
+rabbit_userid = {{ neutron_rabbitmq_userid }}
+rabbit_password = {{ neutron_rabbitmq_password }}
+rabbit_use_ssl = {{ neutron_rabbitmq_use_ssl }}
+rabbit_virtual_host = {{ neutron_rabbitmq_vhost }}
+rpc_conn_pool_size = {{ neutron_rpc_conn_pool_size }}
+
+[database]
+connection = mysql+pymysql://{{ neutron_galera_user }}:{{ neutron_container_mysql_password }}@{{ neutron_galera_address }}/{{ neutron_galera_database }}?charset=utf8
+max_overflow = {{ neutron_db_max_overflow }}
+max_pool_size = {{ neutron_db_pool_size }}
+pool_timeout = {{ neutron_db_pool_timeout }}
+
+[aim]
+agent_down_time = 75
+poll_config = False
+aim_system_id = {{ opflex_apic_system_id }}
+max_operation_retry = 5
+
+[apic]
+apic_hosts = {{ opflex_apic_hosts | join(',') }}
+apic_username = {{ opflex_apic_user }}
+apic_password = {{ opflex_apic_password }}
+apic_use_ssl = {{ opflex_apic_use_ssl | bool }}

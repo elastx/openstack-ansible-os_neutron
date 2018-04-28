@@ -9,6 +9,8 @@ num_sync_threads = {{ neutron_num_sync_threads | default(neutron_api_threads) }}
 # Drivers
 interface_driver = {{ neutron_plugins[neutron_plugin_type].driver_interface }}
 dhcp_driver = {{ neutron_driver_dhcp }}
+{% if neutron_plugin_type == 'ml2.opflex' %}ovs_integration_bridge = {{ opflex_access_bridge }}{% endif %}
+
 
 # Dnsmasq options
 dnsmasq_config_file = {{ neutron_conf_dir }}/dnsmasq-neutron.conf
