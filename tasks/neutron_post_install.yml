@@ -125,8 +125,8 @@
   static: no
   when: neutron_plugin_type == 'nuage'
 
-- name: Setup Opflex config
-  include: opflex_config.yml
+- name: Setup Opflex
+  include: opflex.yml
   static: no
   when: neutron_plugin_type == 'ml2.opflex'
 
