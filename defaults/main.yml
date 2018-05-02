@@ -43,10 +43,10 @@ dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 dragonflow_git_install_branch: stable/ocata
 
 group_based_policy_git_repo: https://git.openstack.org/openstack/group-based-policy
-group_based_policy_git_install_branch: stable/newton
+group_based_policy_git_install_branch: stable/ocata
 
 group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-group-based-policy-client
-group_based_policy_client_git_install_branch: stable/newton
+group_based_policy_client_git_install_branch: stable/ocata
 
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.7.1
@@ -59,7 +59,7 @@ opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.2.1
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 5.2.3
+opflex_agent_git_install_branch: 6.2.2
 opflex_agent_git_package_name: neutron-opflex-agent
 
 # Calico Felix agent upstream settings
