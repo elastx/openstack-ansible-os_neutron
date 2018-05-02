@@ -380,7 +380,7 @@ neutron_services:
    group: neutron_server
    service_name: neutron-server
    service_en: True
-   config_options: "--config-file {{ neutron_conf_dir }}/neutron.conf --config-file {{ neutron_conf_dir }}/{{ neutron_plugins[neutron_plugin_type].plugin_ini }} --log-file=/var/log/neutron/neutron-server.log {% if neutron_plugin_type == 'ml2.dragonflow' %}--config-file {{ neutron_conf_dir }}/dragonflow.ini{% endif %}"
+   config_options: "--config-file {{ neutron_conf_dir }}/neutron.conf --config-file {{ neutron_conf_dir }}/{{ neutron_plugins[neutron_plugin_type].plugin_ini }} --log-file=/var/log/neutron/neutron-server.log {% if neutron_plugin_type == 'ml2.dragonflow' %}--config-file {{ neutron_conf_dir }}/dragonflow.ini{% endif %} {% if neutron_plugin_type == 'ml2.opflex' %}--config-file {{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini{% endif %}"
    init_config_overrides: "{{ neutron_server_init_overrides }}"
    start_order: 1
  calico-felix:
