@@ -142,22 +142,13 @@
 
 - name: Copy apic plugin config
   config_template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
+    src: "plugins/ml2/ml2_conf_cisco_apic.ini.j2"
+    dest: "{{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini"
     owner: "root"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
+    group: "{{ neutron_system_group_name }}"
     mode: "0640"
-    config_overrides: "{{ item.config_overrides }}"
-    config_type: "{{ item.config_type }}"
-  with_items:
-    - src: "plugins/ml2/ml2_conf_cisco_apic.ini.j2"
-      dest: "{{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini"
-      config_overrides: "{{ neutron_opflex_ml2_conf_ini_overrides }}"
-      config_type: "ini"
-    - src: "plugins/ml2/cisco_apic_network_constraints.ini.j2"
-      dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
-      config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
-      config_type: "ini"
+    config_overrides: "{{ neutron_opflex_ml2_conf_ini_overrides }}"
+    config_type: "ini"
   notify: Restart neutron services
   when:
     - "(neutron_services['neutron-server']['group'] in group_names) or (neutron_services['opflex-apic-service-agent']['group'] in group_names)"
@@ -274,7 +265,7 @@
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
-    - "neutron_services['opflex-aim-aid']['group'] in group_names)"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
   tags:
     - opflex-aim-init
     - opflex-aim-upgrade
@@ -298,7 +289,7 @@
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
-    - "neutron_services['opflex-aim-aid']['group'] in group_names)"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
   tags:
     - opflex-aim-init
     - opflex-aim-upgrade
@@ -347,14 +338,14 @@
     path: "{{ neutron_conf_dir }}/opflex-agent"
     state: directory
     owner: root
-    group: "{{ item.group|default(neutron_system_group_name) }}"
+    group: "{{ neutron_system_group_name }}"
     mode: "0755"
   when:
     - "neutron_services['opflex-apic-host-agent']['group'] in group_names"
   tags:
     - opflex-config
 
-- name: Copy opflex-apic-host-agent config
+- name: Copy agent-ovs and opflex-apic-host-agent config
   config_template:
     src: "{{ item.src }}"
     dest: "{{ item.dest }}"
@@ -367,6 +358,10 @@
     - src: "apic_topology_service.ini.j2"
       dest: "{{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini.conf"
       config_overrides: "{{ neutron_opflex_apic_topology_constraints_ini_overrides }}"
+      config_type: "json"
+    - src: "opflex-agent-ovs.conf.j2"
+      dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
+      config_overrides: "{{ neutron_opflex_ovs_agent_json_overrides }}"
       config_type: "json"
   when:
     - "neutron_services['opflex-ovs-agent']['group'] in group_names"
@@ -381,32 +376,13 @@
     src: "{{ neutron_bin }}/{{ item }}"
     dest: "/usr/bin/{{ item }}"
     owner: "root"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
+    group: "{{ neutron_system_group_name }}"
     state: link
   with_items:
     - neutron-metadata-agent
     - opflex-ep-watcher
     - opflex-ns-proxy
     - opflex-state-watcher
-  when:
-    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
-  tags:
-    - opflex-config
-
-- name: Copy opflex ovs agent config
-  config_template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "root"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
-    mode: "0640"
-    config_overrides: "{{ item.config_overrides }}"
-    config_type: "{{ item.config_type }}"
-  with_items:
-    - src: "opflex-agent-ovs.conf.j2"
-      dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
-      config_overrides: "{{ neutron_opflex_ovs_agent_json_overrides }}"
-      config_type: "json"
   when:
     - "neutron_services['opflex-ovs-agent']['group'] in group_names"
   tags:
