@@ -152,11 +152,7 @@
       state: "True"
     - name: "need_db_contract"
       state: "True"
-    - name: "need_apic_ml2_init"
-      state: "True"
-    - name: "need_gbp_init"
-      state: "True"
-    - name: "need_aim_init"
+    - name: "need_aim_upgrade"
       state: "True"
   when: (neutron_get_venv | changed) or
         (neutron_venv_dir | changed) or
@@ -167,9 +163,7 @@
         ('neutron' not in ansible_local['openstack_ansible']) or
         ('need_db_expand' not in ansible_local['openstack_ansible']['neutron']) or
         ('need_db_contract' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_apic_ml2_init' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_gbp_init' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_aim_init' not in ansible_local['openstack_ansible']['neutron'])
+        ('need_aim_upgrade' not in ansible_local['openstack_ansible']['neutron'])
 
 - name: Record the venv tag deployed
   ini_file:

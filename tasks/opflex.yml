@@ -13,6 +13,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+- name: Initialise aim facts
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: neutron
+    option: "{{ item.name }}"
+    value: "{{ item.state }}"
+  with_items:
+    - name: "need_aim_init"
+      state: "True"
+    - name: "need_apic_ml2_init"
+      state: "True"
+    - name: "need_gbp_init"
+      state: "True"
+  when: (ansible_local is not defined) or
+        ('openstack_ansible' not in ansible_local) or
+        ('neutron' not in ansible_local['openstack_ansible']) or
+        ('need_aim_init' not in ansible_local['openstack_ansible']['neutron']) or
+        ('need_apic_ml2_init' not in ansible_local['openstack_ansible']['neutron']) or
+        ('need_gbp_init' not in ansible_local['openstack_ansible']['neutron'])
+
+- name: Refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+
 - name: Add opflex repository (APT)
   apt_repository:
     repo: "{{ opflex_repo.repo }}"
@@ -133,6 +158,7 @@
       dest: "{{ neutron_conf_dir }}/plugins/ml2/cisco_apic_network_constraints.ini"
       config_overrides: "{{ neutron_opflex_network_constraints_ini_overrides }}"
       config_type: "ini"
+  notify: Restart neutron services
   when:
     - "(neutron_services['neutron-server']['group'] in group_names) or (neutron_services['opflex-apic-service-agent']['group'] in group_names)"
   tags:
@@ -142,6 +168,7 @@
   command: "{{ neutron_bin }}/apic-ml2-db-manage --config-file {{ neutron_db_config }} upgrade head"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_apic_ml2_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
@@ -165,6 +192,7 @@
   command: "{{ neutron_bin }}/gbp-db-manage --config-file {{ neutron_db_config }} upgrade head"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_gbp_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
@@ -231,6 +259,7 @@
       dest: "/etc/aim/aimctl.conf"
       config_overrides: "{{ neutron_opflex_aimctl_conf_ini_overrides }}"
       config_type: "ini"
+  notify: Restart neutron services
   when:
     - "neutron_services['opflex-aim-aid']['group'] in group_names"
   register: aim_config
@@ -241,26 +270,44 @@
   command: "{{ neutron_bin }}/aimctl db-migration upgrade head"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
   when:
-    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
     - "neutron_services['opflex-aim-aid']['group'] in group_names)"
   tags:
     - opflex-aim-init
+    - opflex-aim-upgrade
 
 - name: Perform aim config update
   command: "{{ neutron_bin }}/aimctl config update"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
   when:
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
     - "neutron_services['opflex-aim-aid']['group'] in group_names"
-    - "aim_config | changed"
+    - (aim_config | changed) or
+      (ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool)
+
+- name: Perform aim hashtree reset
+  command: "{{ neutron_bin }}/aimdebug hashtree reset"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names)"
+  tags:
+    - opflex-aim-init
+    - opflex-aim-upgrade
 
 - name: Create ACI infra
   command: "{{ neutron_bin }}/aimctl infra create"
   become: yes
   become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
   when:
     - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
@@ -268,12 +315,27 @@
   tags:
     - opflex-aim-init
 
-- name: Disable the aim init fact
+- name: Load domains
+  command: "{{ neutron_bin }}/aimctl manager load-domains --enforce"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-init
+
+- name: Disable the aim init and upgrade fact
   ini_file:
     dest: "/etc/ansible/facts.d/openstack_ansible.fact"
     section: neutron
-    option: "need_aim_init"
+    option: "{{ item }}"
     value: "False"
+  with_items:
+    - need_aim_init
+    - need_aim_upgrade
 
 - name: Refresh local facts
   setup:
