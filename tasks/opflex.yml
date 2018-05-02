@@ -432,6 +432,6 @@
     state: present 
   when:
     - "neutron_services['opflex-ovs-agent']['group'] in group_names"
-    - "not neutron_vxlan_enabled | bool)"
+    - "not neutron_vxlan_enabled | bool"
   tags:
     - opflex-config
