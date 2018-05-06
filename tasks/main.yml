@@ -94,6 +94,11 @@
   tags:
     - neutron-config
 
+- name: Setup opflex
+  include: opflex.yml
+  static: no
+  when: neutron_plugin_type == 'ml2.opflex'
+
 - include: neutron_l3_ha.yml
   static: no
   when:

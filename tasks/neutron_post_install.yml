@@ -125,11 +125,6 @@
   static: no
   when: neutron_plugin_type == 'nuage'
 
-- name: Setup Opflex
-  include: opflex.yml
-  static: no
-  when: neutron_plugin_type == 'ml2.opflex'
-
 - name: Drop metadata iptables checksum fix
   copy:
     src: "post-up-metadata-checksum"
