@@ -148,7 +148,7 @@
     config_type: "ini"
   notify: Restart neutron services
   when:
-    - "(neutron_services['neutron-server']['group'] in group_names) or (neutron_services['opflex-apic-service-agent']['group'] in group_names)"
+    - "neutron_services['neutron-server']['group'] in group_names"
   tags:
     - opflex-config
 
