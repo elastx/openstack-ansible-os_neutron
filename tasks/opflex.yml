@@ -209,30 +209,6 @@
   tags:
     - opflex-aim-config
 
-- name: Perform apic-ml2 db upgrade
-  command: "{{ neutron_bin }}/apic-ml2-db-manage --config-file {{ neutron_db_config }} upgrade head"
-  become: yes
-  become_user: "{{ neutron_system_user_name }}"
-  notify: Restart neutron services
-  when:
-    - "ansible_local['openstack_ansible']['neutron']['need_apic_ml2_init'] | bool"
-    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
-    - "neutron_services['neutron-server']['group'] in group_names"
-  tags:
-    - opflex-apic-ml2-init
-
-- name: Disable the apic-ml2 init fact
-  ini_file:
-    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
-    section: neutron
-    option: "need_apic_ml2_init"
-    value: "False"
-
-- name: Refresh local facts
-  setup:
-    filter: ansible_local
-    gather_subset: "!all"
-
 - name: Perform gbp db upgrade
   command: "{{ neutron_bin }}/gbp-db-manage --config-file {{ neutron_db_config }} upgrade head"
   become: yes

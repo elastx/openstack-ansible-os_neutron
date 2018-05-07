@@ -86,6 +86,11 @@
   tags:
     - neutron-config
 
+- name: Setup opflex
+  include: opflex.yml
+  static: no
+  when: neutron_plugin_type == 'ml2.opflex'
+
 - include: neutron_service_setup.yml
   static: no
   when:
@@ -93,11 +98,6 @@
     - "inventory_hostname == (groups[neutron_services['neutron-server']['group']] | intersect(ansible_play_hosts))[0]"
   tags:
     - neutron-config
-
-- name: Setup opflex
-  include: opflex.yml
-  static: no
-  when: neutron_plugin_type == 'ml2.opflex'
 
 - include: neutron_l3_ha.yml
   static: no
