@@ -22,15 +22,12 @@
   with_items:
     - name: "need_aim_init"
       state: "True"
-    - name: "need_apic_ml2_init"
-      state: "True"
     - name: "need_gbp_init"
       state: "True"
   when: (ansible_local is not defined) or
         ('openstack_ansible' not in ansible_local) or
         ('neutron' not in ansible_local['openstack_ansible']) or
         ('need_aim_init' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_apic_ml2_init' not in ansible_local['openstack_ansible']['neutron']) or
         ('need_gbp_init' not in ansible_local['openstack_ansible']['neutron'])
 
 - name: Refresh local facts
