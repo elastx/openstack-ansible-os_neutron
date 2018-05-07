@@ -64,6 +64,8 @@
     name: "opflexep"
     state: "present"
     system: "yes"
+  when:
+    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
 
 - name: Add neutron user to _lldpd and opflexep group
   user:
