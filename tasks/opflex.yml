@@ -331,7 +331,7 @@
     config_type: "{{ item.config_type }}"
   with_items:
     - src: "apic_topology_service.ini.j2"
-      dest: "{{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini.conf"
+      dest: "{{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini"
       config_overrides: "{{ neutron_opflex_apic_topology_constraints_ini_overrides }}"
       config_type: "json"
     - src: "opflex-agent-ovs.conf.j2"
