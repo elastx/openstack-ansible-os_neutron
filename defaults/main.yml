@@ -55,7 +55,7 @@ opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.2.1
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 6.2.2
+opflex_agent_git_install_branch: stable/ocata
 opflex_agent_git_package_name: neutron-opflex-agent
 
 # Calico Felix agent upstream settings
