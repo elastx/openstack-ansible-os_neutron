@@ -49,10 +49,10 @@ group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-g
 group_based_policy_client_git_install_branch: stable/ocata
 
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
-opflex_aci_integration_module_git_install_branch: 0.7.1
+opflex_aci_integration_module_git_install_branch: 0.9.0
 
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
-opflex_apic_api_git_install_branch: 1.2.1
+opflex_apic_api_git_install_branch: 1.6.0
 
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
 opflex_agent_git_install_branch: stable/ocata
