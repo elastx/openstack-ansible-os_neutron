@@ -23,6 +23,7 @@ agent_down_time = 75
 poll_config = False
 aim_system_id = {{ opflex_apic_system_id }}
 max_operation_retry = 5
+error_state_recovery_interval = 3600
 
 [apic]
 apic_hosts = {{ opflex_apic_hosts | join(',') }}
