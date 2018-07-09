@@ -56,3 +56,21 @@ neutron_remove_distro_packages:
 
 neutron_lbaasv2_initscript_path: "/etc/init/neutron-lbaasv2-agent.conf"
 neutron_lbaasv2_agent_servicename: "neutron-lbaasv2-agent"
+
+###
+# Opflex Configuration
+#
+neutron_opflex_distro_agent_packages:
+  - lldpd
+neutron_opflex_distro_ovs_agent_packages:
+  - agent-ovs
+  - openvswitch-common
+  - openvswitch-switch
+  - supervisor
+
+opflex_apt_repo_url: "http://localhost/ubuntu"
+opflex_repo:
+  repo: "deb [trusted=yes] {{ opflex_apt_repo_url }} {{ ansible_distribution_release }} main"
+  state: present
+
+opflex_dhclient_conf_target: "/etc/dhcp/dhclient.conf"

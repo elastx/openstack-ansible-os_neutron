@@ -2,4 +2,8 @@
 
 D /var/lock/{{ item.program_binary | default(item.service_name) }} 2755 {{ item.system_user | default(neutron_system_user_name) }} {{ item.system_group | default(neutron_system_group_name) }}
 D /var/run/{{ item.program_binary | default(item.service_name) }} 2755 {{ item.system_user | default(neutron_system_user_name) }} {{ item.system_group | default(neutron_system_group_name) }}
-D {{ neutron_lock_path }} 2755 {{ item.system_user | default(neutron_system_user_name) }} {{ item.system_group | default(neutron_system_group_name) }}
+{% if item.service_name == 'aim-aid' %}
+D /var/run/aid 2755 {{ item.system_user | default(neutron_system_user_name) }} {{ item.system_group | default(neutron_system_group_name) }}
+{% endif %}
+
+D {{ neutron_lock_path }} 2755 {{ neutron_system_user_name }} {{ neutron_system_group_name }}

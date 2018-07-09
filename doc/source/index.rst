@@ -9,6 +9,7 @@ Neutron role for OpenStack-Ansible
    app-openvswitch.rst
    app-nuage.rst
    app-calico.rst
+   app-opflex.rst
 
 :tags: openstack, neutron, cloud, ansible
 :category: \*nix

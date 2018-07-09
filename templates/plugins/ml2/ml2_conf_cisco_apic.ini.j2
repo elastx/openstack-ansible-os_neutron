@@ -1,0 +1,20 @@
+# {{ ansible_managed }}
+
+[apic_aim_auth]
+auth_plugin = v3password
+auth_url = {{ keystone_service_adminurl }}
+username = admin
+password = {{ keystone_auth_admin_password }}
+user_domain_name = default
+project_domain_name = default
+project_name = admin
+
+[ml2_apic_aim]
+enable_optimized_dhcp = True
+enable_optimized_metadata = True
+
+[group_policy]
+policy_drivers = aim_mapping
+extension_drivers = aim_extension,proxy_group
+[group_policy_implicit_policy]
+default_ip_pool = {{ opflex_default_ip_pool | default('192.168.0.0/16') }}

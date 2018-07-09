@@ -53,6 +53,18 @@ networking_calico_git_install_branch: master
 dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 # TODO(evrardjp): use stable/pike when branched.
 dragonflow_git_install_branch: dbc8af36bc5970cc804fb711e79f18c01d0a71ce
+# Cisco ACI Opflex integration
+group_based_policy_git_repo: https://git.openstack.org/openstack/group-based-policy
+group_based_policy_git_install_branch: stable/pike
+group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-group-based-policy-client
+group_based_policy_client_git_install_branch: stable/pike
+opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
+opflex_aci_integration_module_git_install_branch: 0.10.0
+opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
+opflex_apic_api_git_install_branch: 1.6.0
+opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
+opflex_agent_git_install_branch: 7.1.0
+opflex_agent_git_package_name: neutron-opflex-agent
 
 # Developer mode
 neutron_developer_mode: false
@@ -141,6 +153,44 @@ neutron_sriov_nic_agent_ini_overrides: {}
 neutron_sriov_nic_agent_init_overrides: {}
 neutron_vpn_agent_init_overrides: {}
 neutron_vpnaas_agent_ini_overrides: {}
+neutron_opflex_aim_conf_ini_overrides: {}
+neutron_opflex_aimctl_conf_ini_overrides: {}
+neutron_opflex_aim_aid_init_overrides: {}
+neutron_opflex_aim_event_service_polling_init_overrides: {}
+neutron_opflex_aim_event_service_rpc_init_overrides: {}
+neutron_opflex_agent_init_overrides: {}
+neutron_opflex_apic_host_agent_init_overrides: {}
+neutron_opflex_apic_service_agent_init_overrides: {}
+neutron_opflex_apic_topology_constraints_ini_overrides: {}
+neutron_opflex_mcast_agent_init_overrides: {}
+neutron_opflex_ml2_conf_ini_overrides: {}
+neutron_opflex_ovs_agent_init_overrides: {}
+neutron_opflex_ovs_agent_json_overrides: {}
+
+###
+### Opflex Configuration
+###
+
+# See documentation section titled "Scenario - Using the OpFlex neutron plugin"
+opflex_integration_bridge: br-fabric
+opflex_access_bridge: br-int
+opflex_uplink_iface: eth15
+opflex_uplink_vlan: 4093
+opflex_vlan_trunk_iface: eth11
+opflex_agent_ovs_conf_dir: /etc/opflex-agent-ovs
+
+opflex_apic_system_id: "openstack"
+opflex_apic_hosts:
+  - 10.0.0.1
+  - 10.0.0.2
+opflex_apic_peer_svi: 10.0.0.30
+opflex_apic_peer_port: 8009
+opflex_apic_remote_ip: 10.0.0.32
+opflex_apic_user: opflex
+opflex_apic_password: opflex
+opflex_apic_use_ssl: True
+opflex_apic_vmdom: ostack
+opflex_apic_entity_profile: ostack_entity
 
 ###
 ### Quotas

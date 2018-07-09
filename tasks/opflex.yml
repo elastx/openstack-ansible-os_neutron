@@ -1,0 +1,414 @@
+---
+# Copyright 2017, Elastx AB
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+- name: Initialise aim facts
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: neutron
+    option: "{{ item.name }}"
+    value: "{{ item.state }}"
+  with_items:
+    - name: "need_aim_init"
+      state: "True"
+    - name: "need_gbp_init"
+      state: "True"
+  when: (ansible_local is not defined) or
+        ('openstack_ansible' not in ansible_local) or
+        ('neutron' not in ansible_local['openstack_ansible']) or
+        ('need_aim_init' not in ansible_local['openstack_ansible']['neutron']) or
+        ('need_gbp_init' not in ansible_local['openstack_ansible']['neutron'])
+
+- name: Refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+
+- name: Add opflex repository (APT)
+  apt_repository:
+    repo: "{{ opflex_repo.repo }}"
+    state: "{{ opflex_repo.state }}"
+  register: opflex_add_repo
+  until: opflex_add_repo|success
+  retries: 5
+  delay: 2
+  when:
+    - ansible_pkg_mgr == 'apt'
+  tags:
+    - opflex-install
+    - opflex-distro-packages
+
+- name: Install opflex distro packages
+  package:
+    name: "{{ neutron_opflex_package_list }}"
+    state: "{{ neutron_package_state }}"
+    update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  tags:
+    - opflex-install
+    - opflex-distro-packages
+
+- name: Create the opflexep group
+  group:
+    name: "opflexep"
+    state: "present"
+    system: "yes"
+  when:
+    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
+
+- name: Add neutron user to _lldpd and opflexep group
+  user:
+    name: "{{ neutron_system_user_name }}"
+    groups: "{{ item }}"
+    append: yes
+  with_items:
+    - _lldpd
+    - opflexep
+  when:
+    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
+  tags:
+    - opflex-install
+    - opflex-distro-packages
+
+- name: Install opflex pip packages
+  pip:
+    name: "{{ neutron_optional_opflex_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ neutron_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ neutron_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  notify: Restart neutron services
+  when:
+    - "neutron_services['neutron-server']['group'] in group_names"
+  tags:
+    - opflex-install
+    - opflex-pip-packages
+
+- name: Install opflex agent pip packages
+  pip:
+    name: "{{ neutron_optional_opflex_agent_pip_packages | join(' ') }}"
+    state: latest
+    virtualenv: "{{ neutron_bin | dirname }}"
+    virtualenv_site_packages: "no"
+    extra_args: >-
+      {{ neutron_developer_mode | ternary('--constraint /opt/developer-pip-constraints.txt', '') }}
+      {{ (pip_install_upper_constraints is defined) | ternary('--constraint ' + pip_install_upper_constraints | default(''),'') }}
+      {{ pip_install_options | default('') }}
+  register: install_packages
+  until: install_packages|success
+  retries: 5
+  delay: 2
+  notify: Restart neutron services
+  when:
+    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
+  tags:
+    - opflex-install
+    - opflex-agent-pip-packages
+
+- name: Copy dhclient config
+  template:
+    src: "dhclient.conf.j2"
+    dest: "{{ opflex_dhclient_conf_target }}"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  tags:
+    - opflex-config
+
+- name: Cycle apic interface
+  shell: |
+    ifdown {{ opflex_uplink_iface }} && ifup {{ opflex_uplink_iface }}
+  tags:
+    - opflex-config
+
+- name: Copy apic plugin config
+  config_template:
+    src: "plugins/ml2/ml2_conf_cisco_apic.ini.j2"
+    dest: "{{ neutron_conf_dir }}/plugins/ml2/ml2_conf_cisco_apic.ini"
+    owner: "root"
+    group: "{{ neutron_system_group_name }}"
+    mode: "0640"
+    config_overrides: "{{ neutron_opflex_ml2_conf_ini_overrides }}"
+    config_type: "ini"
+  notify: Restart neutron services
+  when:
+    - "neutron_services['neutron-server']['group'] in group_names"
+  tags:
+    - opflex-config
+
+- name: Ensure aim config directory and log files exists
+  file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    owner: "{{ item.owner|default(neutron_system_user_name) }}"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - path: /etc/aim
+      state: directory
+      owner: root
+      mode: "0755"
+    - path: /run/aid/events
+      state: directory
+      mode: "0755"
+    - path: /var/log/aim-aid.log
+      state: touch
+      mode: "0640"
+    - path: /var/log/aim-event-service-polling.log
+      state: touch
+      mode: "0640"
+    - path: /var/log/aim-event-service-rpc.log
+      state: touch
+      mode: "0640"
+  when:
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-config
+
+- name: Copy aim service config
+  config_template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "0640"
+    config_overrides: "{{ item.config_overrides }}"
+    config_type: "{{ item.config_type }}"
+  with_items:
+    - src: "aim.conf.j2"
+      dest: "/etc/aim/aim.conf"
+      config_overrides: "{{ neutron_opflex_aim_conf_ini_overrides }}"
+      config_type: "ini"
+    - src: "aimctl.conf.j2"
+      dest: "/etc/aim/aimctl.conf"
+      config_overrides: "{{ neutron_opflex_aimctl_conf_ini_overrides }}"
+      config_type: "ini"
+  notify: Restart neutron services
+  when:
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  register: aim_config
+  tags:
+    - opflex-aim-config
+
+- name: Perform gbp db upgrade
+  command: "{{ neutron_bin }}/gbp-db-manage --config-file {{ neutron_db_config }} upgrade head"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_gbp_init'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['neutron-server']['group'] in group_names"
+  tags:
+    - opflex-gbp-init
+
+- name: Disable the gbp init fact
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: neutron
+    option: "need_gbp_init"
+    value: "False"
+
+- name: Refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+
+- name: Perform aim db upgrade
+  command: "{{ neutron_bin }}/aimctl db-migration upgrade head"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-init
+    - opflex-aim-upgrade
+
+- name: Perform aim config update
+  command: "{{ neutron_bin }}/aimctl config update"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+    - (aim_config | changed) or
+      (ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool)
+
+- name: Perform aim hashtree reset
+  command: "{{ neutron_bin }}/aimdebug hashtree reset"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-init
+    - opflex-aim-upgrade
+
+- name: Create ACI infra
+  command: "{{ neutron_bin }}/aimctl infra create"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-init
+
+- name: Load domains
+  command: "{{ neutron_bin }}/aimctl manager load-domains --enforce"
+  become: yes
+  become_user: "{{ neutron_system_user_name }}"
+  notify: Restart neutron services
+  when:
+    - "ansible_local['openstack_ansible']['neutron']['need_aim_init'] | bool"
+    - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-init
+
+- name: Disable the aim init and upgrade fact
+  ini_file:
+    dest: "/etc/ansible/facts.d/openstack_ansible.fact"
+    section: neutron
+    option: "{{ item }}"
+    value: "False"
+  with_items:
+    - need_aim_init
+    - need_aim_upgrade
+
+- name: Refresh local facts
+  setup:
+    filter: ansible_local
+    gather_subset: "!all"
+
+- name: Ensure neutron opflex-agent config directory exists
+  file:
+    path: "{{ neutron_conf_dir }}/opflex-agent"
+    state: directory
+    owner: root
+    group: "{{ neutron_system_group_name }}"
+    mode: "0755"
+  when:
+    - "neutron_services['opflex-apic-host-agent']['group'] in group_names"
+  tags:
+    - opflex-config
+
+- name: Copy agent-ovs and opflex-apic-host-agent config
+  config_template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "0640"
+    config_overrides: "{{ item.config_overrides }}"
+    config_type: "{{ item.config_type }}"
+  with_items:
+    - src: "apic_topology_service.ini.j2"
+      dest: "{{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini"
+      config_overrides: "{{ neutron_opflex_apic_topology_constraints_ini_overrides }}"
+      config_type: "json"
+    - src: "opflex-agent-ovs.conf.j2"
+      dest: "/etc/opflex-agent-ovs/opflex-agent-ovs.conf"
+      config_overrides: "{{ neutron_opflex_ovs_agent_json_overrides }}"
+      config_type: "json"
+  notify:
+    - Restart neutron services
+  when:
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+  tags:
+    - opflex-config
+
+# python-opflex-agent hard-codes command paths in their supervisord config
+# See https://github.com/noironetworks/python-opflex-agent/blob/e28e681d9915b691002e6a429e69f50c8f0052ba/opflexagent/as_metadata_manager.py#L662
+#
+- name: Create symlinks for optimized metadata and dhcp
+  file:
+    src: "{{ neutron_bin }}/{{ item }}"
+    dest: "/usr/bin/{{ item }}"
+    owner: "root"
+    group: "{{ neutron_system_group_name }}"
+    state: link
+  with_items:
+    - neutron-metadata-agent
+    - opflex-ep-watcher
+    - opflex-ns-proxy
+    - opflex-state-watcher
+  when:
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+  tags:
+    - opflex-config
+
+- name: Generate metadata-agent config
+  config_template:
+    src: "{{ neutron_services['neutron-metadata-agent']['service_conf'] }}.j2"
+    dest: "{{ neutron_services['neutron-metadata-agent']['service_conf_path'] }}/{{ neutron_services['neutron-metadata-agent']['service_conf'] }}"
+    owner: "root"
+    group: "{{ neutron_system_group_name }}"
+    mode: "0640"
+    config_overrides: "{{neutron_services['neutron-metadata-agent']['config_overrides'] }}"
+    config_type: "{{ neutron_services['neutron-metadata-agent']['config_type'] }}"
+  notify:
+    - Restart neutron services
+  when:
+    - "not neutron_services['neutron-metadata-agent']['service_en'] | bool"
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+
+- name: Create OVS integration bridge
+  openvswitch_bridge:
+    bridge: "{{ opflex_integration_bridge }}"
+    state: present
+    fail_mode: secure
+  when:
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+  tags:
+    - opflex-config
+
+- name: Create OVS port (VXLAN)
+  openvswitch_port:
+    bridge: "{{ opflex_integration_bridge }}"
+    port: "{{ opflex_integration_bridge }}_vxlan0"
+    state: present 
+    set: "Interface {{ opflex_integration_bridge }}_vxlan0 type=vxlan options:remote_ip=flow options:dst_port=8472"
+  when:
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+    - "neutron_vxlan_enabled | bool"
+  tags:
+    - opflex-config
+
+- name: Create OVS port (VLAN)
+  openvswitch_port:
+    bridge: "{{ opflex_integration_bridge }}"
+    port: "{{ opflex_vlan_trunk_iface }}"
+    state: present 
+  when:
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
+    - "not neutron_vxlan_enabled | bool"
+  tags:
+    - opflex-config
