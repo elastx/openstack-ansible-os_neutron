@@ -109,7 +109,6 @@ neutron_optional_opflex_pip_packages:
   - group-based-policy
   - neutron-ml2-driver-apic
   - pyOpenSSL
-  - python-group-based-policy-client
 
 neutron_developer_constraints:
   - "git+{{ neutron_git_repo }}@{{ neutron_git_install_branch }}#egg=neutron"
@@ -120,7 +119,6 @@ neutron_developer_constraints:
   - "git+{{ networking_calico_git_repo }}@{{ networking_calico_git_install_branch }}#egg=networking-calico"
   - "git+{{ dragonflow_git_repo }}@{{ dragonflow_git_install_branch }}#egg=dragonflow"
   - "git+{{ group_based_policy_git_repo }}@{{ group_based_policy_git_install_branch }}#egg=group-based-policy"
-  - "git+{{ group_based_policy_client_git_repo }}@{{ group_based_policy_client_git_install_branch }}#egg=python-group-based-policy-client"
   - "git+{{ opflex_aci_integration_module_git_repo }}@{{ opflex_aci_integration_module_git_install_branch }}#egg=aci_integration_module"
   - "git+{{ opflex_apic_ml2_driver_git_repo }}@{{ opflex_apic_ml2_driver_git_install_branch }}#egg=neutron-ml2-driver-apic"
   - "git+{{ opflex_apic_api_git_repo }}@{{ opflex_apic_api_git_install_branch }}#egg=apicapi"
