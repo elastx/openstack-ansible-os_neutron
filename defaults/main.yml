@@ -54,7 +54,7 @@ dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 # TODO(evrardjp): use stable/pike when branched.
 dragonflow_git_install_branch: dbc8af36bc5970cc804fb711e79f18c01d0a71ce
 # Cisco ACI Opflex integration
-group_based_policy_git_repo: https://git.openstack.org/noironetworks/group-based-policy
+group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
 group_based_policy_git_install_branch: 7.0.2
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.10.0
