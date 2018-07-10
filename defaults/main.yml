@@ -42,11 +42,11 @@ networking_calico_git_install_branch: master
 dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 dragonflow_git_install_branch: stable/ocata
 
-group_based_policy_git_repo: https://git.openstack.org/openstack/group-based-policy
-group_based_policy_git_install_branch: stable/ocata
+group_based_policy_git_repo: https://git.openstack.org/noironetworks/group-based-policy
+group_based_policy_git_install_branch: 6.6.7
 
-group_based_policy_client_git_repo: https://git.openstack.org/openstack/python-group-based-policy-client
-group_based_policy_client_git_install_branch: stable/ocata
+group_based_policy_client_git_repo: https://git.openstack.org/noironetworks/python-group-based-policy-client
+group_based_policy_client_git_install_branch: 0.14.0
 
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.10.0
