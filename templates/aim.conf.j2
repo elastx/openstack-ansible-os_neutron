@@ -1,6 +1,9 @@
 # {{ ansible_managed }}
 [DEFAULT]
 debug = {{ debug }}
+rpc_backend = rabbit
+control_exchange = neutron
+#default_log_levels = neutron.context=ERROR
 
 [oslo_messaging_rabbit]
 rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
