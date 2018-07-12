@@ -56,6 +56,8 @@ dragonflow_git_install_branch: dbc8af36bc5970cc804fb711e79f18c01d0a71ce
 # Cisco ACI Opflex integration
 group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
 group_based_policy_git_install_branch: 7.0.2
+group_based_policy_client_git_repo: https://github.com/noironetworks/python-group-based-policy-client
+group_based_policy_client_git_install_branch: 0.15.0
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.10.0
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
