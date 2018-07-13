@@ -569,7 +569,7 @@ neutron_services:
    service_name: aim-aid
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_binary: aim-aid
-   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-aid.log"
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-aid.log"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_aim_aid_init_overrides }}"
    start_order: 3
@@ -578,7 +578,7 @@ neutron_services:
    service_name: aim-event-service-polling
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_binary: aim-event-service-polling
-   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-polling.log"
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-event-service-polling.log"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_aim_event_service_polling_init_overrides }}"
    start_order: 3
@@ -587,7 +587,7 @@ neutron_services:
    service_name: aim-event-service-rpc
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    program_binary: aim-event-service-rpc
-   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/aim-event-service-rpc.log"
+   config_options: "--config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-event-service-rpc.log"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_aim_event_service_rpc_init_overrides }}"
    start_order: 3

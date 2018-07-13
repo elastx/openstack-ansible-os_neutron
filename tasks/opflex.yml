@@ -169,15 +169,15 @@
     - path: /run/aid/events
       state: directory
       mode: "0755"
-    - path: /var/log/aim-aid.log
-      state: touch
-      mode: "0640"
-    - path: /var/log/aim-event-service-polling.log
-      state: touch
-      mode: "0640"
-    - path: /var/log/aim-event-service-rpc.log
-      state: touch
-      mode: "0640"
+#    - path: /var/log/neutron/aim-aid.log
+#      state: touch
+#      mode: "0640"
+#    - path: /var/log/neutron/aim-event-service-polling.log
+#      state: touch
+#      mode: "0640"
+#    - path: /var/log/neutron/aim-event-service-rpc.log
+#      state: touch
+#      mode: "0640"
   when:
     - "neutron_services['opflex-aim-aid']['group'] in group_names"
   tags:
