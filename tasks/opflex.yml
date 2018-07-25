@@ -130,12 +130,14 @@
     owner: "root"
     group: "root"
     mode: "0644"
+  register: dhclient_config
   tags:
     - opflex-config
 
 - name: Cycle apic interface
   shell: |
     ifdown {{ opflex_uplink_iface }} && ifup {{ opflex_uplink_iface }}
+  when: dhclient_config.changed
   tags:
     - opflex-config
 
