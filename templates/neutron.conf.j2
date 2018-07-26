@@ -9,7 +9,8 @@
 
 {% if (neutron_lbaasv2|bool) and ('neutron_lbaas.services.loadbalancer.plugin.LoadBalancerPluginv2' not in neutron_plugin_base) %}
   {% set _ = neutron_plugin_loaded_base.append("lbaasv2") %}
-{%- endif -%}
+{% endif %}
+
 
 # General, applies to all host groups
 [DEFAULT]
