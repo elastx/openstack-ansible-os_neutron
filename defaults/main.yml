@@ -65,9 +65,6 @@ opflex_apic_api_git_install_branch: 1.6.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
 opflex_agent_git_install_branch: 3182d41d32547e4eb0aad8f27ccea43cc2d382b4
 opflex_agent_git_package_name: neutron-opflex-agent
-opflex_endpoint_request_timeout: 300
-opflex_enable_snat_conn_track: False
-opflex_notify_socket_path: /var/run/opflex-agent-notif.sock
 
 # Developer mode
 neutron_developer_mode: false
@@ -194,6 +191,12 @@ opflex_apic_password: opflex
 opflex_apic_use_ssl: True
 opflex_apic_vmdom: ostack
 opflex_apic_entity_profile: ostack_entity
+
+opflex_endpoint_request_timeout: 300
+opflex_enable_snat_conn_track: False
+opflex_notify_socket_path: /var/run/opflex-agent-notif.sock
+opflex_enable_raw_sql_for_device_rpc: False
+opflex_enable_new_rpc: False
 
 ###
 ### Quotas
