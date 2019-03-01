@@ -55,7 +55,7 @@ dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 dragonflow_git_install_branch: dbc8af36bc5970cc804fb711e79f18c01d0a71ce
 # Cisco ACI Opflex integration
 group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
-group_based_policy_git_install_branch: 7.0.2
+group_based_policy_git_install_branch: c21733de2ea9c5c671c716194e6e76b2706767b
 group_based_policy_client_git_repo: https://github.com/noironetworks/python-group-based-policy-client
 group_based_policy_client_git_install_branch: 0.15.0
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
@@ -63,8 +63,11 @@ opflex_aci_integration_module_git_install_branch: 0.10.0
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.6.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 7.1.0
+opflex_agent_git_install_branch: 3182d41d32547e4eb0aad8f27ccea43cc2d382b4
 opflex_agent_git_package_name: neutron-opflex-agent
+opflex_endpoint_request_timeout: 300
+opflex_enable_snat_conn_track: False
+opflex_notify_socket_path: /var/run/opflex-agent-notif.sock
 
 # Developer mode
 neutron_developer_mode: false

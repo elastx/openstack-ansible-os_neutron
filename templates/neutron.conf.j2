@@ -25,6 +25,7 @@ executor_thread_pool_size = {{ neutron_rpc_thread_pool_size }}
 rpc_response_timeout = {{ neutron_rpc_response_timeout }}
 transport_url = rabbit://{% for host in neutron_rabbitmq_servers.split(',') %}{{ neutron_rabbitmq_userid }}:{{ neutron_rabbitmq_password }}@{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ neutron_rabbitmq_vhost }}{% endif %}{% endfor %}
 
+
 # Domain to use for building hostnames
 dns_domain = {{ neutron_dns_domain }}
 
@@ -236,6 +237,7 @@ service_name = neutron
 auth_version = 3
 {% endif %}
 
+{# End of server side configuration #}
 {% endif %}
 
 # Agent
@@ -267,3 +269,13 @@ transport_url = rabbit://{% for host in neutron_rabbitmq_telemetry_servers.split
 # Concurrency (locking mechanisms)
 [oslo_concurrency]
 lock_path = {{ neutron_lock_path }}
+
+{# Configutaion only for hypervisors #}
+{% if neutron_services['neutron-server']['group'] not in group_names %}
+# Opflex options
+[opflex]
+# Fix for Hypervisor neutron-opflex-agent init timeout
+endpoint_request_timeout = {{ opflex_endpoint_request_timeout }}
+enable_snat_conn_track = {{ opflex_enable_snat_conn_track }}
+opflex_notify_socket_path = {{ opflex_notify_socket_path }}
+{% endif %}
