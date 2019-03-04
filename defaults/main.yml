@@ -195,6 +195,7 @@ opflex_apic_entity_profile: ostack_entity
 opflex_endpoint_request_timeout: 300
 opflex_enable_snat_conn_track: False
 opflex_notify_socket_path: /var/run/opflex-agent-notif.sock
+opflex_websocket_subscription_timeout: 0
 opflex_enable_raw_sql_for_device_rpc: False
 opflex_enable_new_rpc: False
 
