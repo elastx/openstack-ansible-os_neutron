@@ -110,6 +110,7 @@ neutron_optional_opflex_pip_packages:
   - neutron-ml2-driver-apic
   - pyOpenSSL
   - python-group-based-policy-client
+  - SQLAlchemy>=1.1.12
 
 neutron_developer_constraints:
   - "git+{{ neutron_git_repo }}@{{ neutron_git_install_branch }}#egg=neutron"
