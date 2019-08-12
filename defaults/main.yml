@@ -193,6 +193,7 @@ opflex_apic_vmdom: ostack
 opflex_apic_entity_profile: ostack_entity
 opflex_apic_switch_pg_name: openstack_sw_pg
 opflex_apic_multicast_address: 225.1.2.3
+opflex_apic_mcast_ranges: "225.2.1.1:225.2.255.255"
 #opflex_apic_shared_context_name: ''
 opflex_apic_vmm_controller_host: openstack
 
