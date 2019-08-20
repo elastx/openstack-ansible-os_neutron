@@ -1,0 +1,33 @@
+# {{ ansible_managed }}
+[DEFAULT]
+apic_system_id = {{ opflex_apic_system_id }}
+
+[apic_vmdom:{{ opflex_apic_vmdom }}]
+{% if neutron_vxlan_enabled | bool %}
+encap_mode = vxlan
+{% else %}
+encap_mode = vlan
+vlan_ranges = {{ neutron_provider_networks.network_vlan_ranges.split(':')[1:3] | join(':') }}
+{% endif %}
+
+
+[apic]
+apic_entity_profile = {{ opflex_apic_entity_profile }}
+apic_name_mapping = use_uuid
+apic_provision_infra = False
+apic_provision_hostlinks = False
+default_arp_flooding = False
+enable_aci_routing = True
+enable_optimized_dhcp = True
+enable_optimized_metadata = True
+scope_infra = False
+scope_names = False
+enable_raw_sql_for_device_rpc = {{ opflex_enable_raw_sql_for_device_rpc }}
+enable_new_rpc = {{ opflex_enable_new_rpc }}
+apic_switch_pg_name = {{ opflex_apic_switch_pg_name }}
+multicast_address = {{ opflex_apic_multicast_address }}
+mcast_ranges = {{ opflex_apic_mcast_ranges }}
+{% if opflex_apic_shared_context_name %}
+shared_context_name = {{ opflex_apic_shared_context_name }}
+{% endif %}
+vmm_controller_host = {{ opflex_apic_vmm_controller_host }}
