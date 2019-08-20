@@ -61,6 +61,8 @@
       state: "True"
     - name: "need_db_contract"
       state: "True"
+    - name: "need_aim_upgrade"
+      state: "True"
   when: (neutron_install_method == 'source' and
          ((neutron_get_venv | changed) or
           (neutron_venv_dir | changed) or
@@ -70,7 +72,8 @@
         ('openstack_ansible' not in ansible_local) or
         ('neutron' not in ansible_local['openstack_ansible']) or
         ('need_db_expand' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_db_contract' not in ansible_local['openstack_ansible']['neutron'])
+        ('need_db_contract' not in ansible_local['openstack_ansible']['neutron']) or
+        ('need_aim_upgrade' not in ansible_local['openstack_ansible']['neutron'])
 
 - name: Ensure Open vSwitch service is started and enabled
   service:
