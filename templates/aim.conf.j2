@@ -1,0 +1,41 @@
+# {{ ansible_managed }}
+[DEFAULT]
+debug = {{ debug }}
+rpc_backend = rabbit
+control_exchange = neutron
+#default_log_levels = neutron.context=ERROR
+apic_system_id = {{ opflex_apic_default_system_id }}
+transport_url = {{ neutron_oslomsg_rpc_transport }}://{% for host in neutron_oslomsg_rpc_servers.split(',') %}{{ neutron_oslomsg_rpc_userid }}:{{ neutron_oslomsg_rpc_password }}@{{ host }}:{{ neutron_oslomsg_rpc_port }}{% if not loop.last %},{% else %}/{{ neutron_oslomsg_rpc_vhost }}{% if neutron_oslomsg_rpc_use_ssl | bool %}?ssl=1{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+
+[oslo_messaging_rabbit]
+ssl = {{ neutron_oslomsg_rpc_use_ssl }}
+rpc_conn_pool_size = {{ neutron_rpc_conn_pool_size }}
+
+[database]
+connection = mysql+pymysql://{{ neutron_galera_user }}:{{ neutron_container_mysql_password }}@{{ neutron_galera_address }}/{{ neutron_galera_database }}?charset=utf8
+max_overflow = {{ neutron_db_max_overflow }}
+max_pool_size = {{ neutron_db_pool_size }}
+pool_timeout = {{ neutron_db_pool_timeout }}
+
+[aim]
+agent_down_time = 75
+poll_config = False
+aim_system_id = {{ opflex_apic_system_id }}
+max_operation_retry = 5
+error_state_recovery_interval = 3600
+websocket_subscription_timeout = {{ opflex_websocket_subscription_timeout }}
+agent_deadlock_time = 300
+unix_socket_path = /run/aim-aid/aid-events.sock
+
+[apic]
+apic_hosts = {{ opflex_apic_hosts | join(',') }}
+apic_username = {{ opflex_apic_user }}
+{% if opflex_apic_private_key_file is defined and opflex_apic_certificate_name is defined %}
+private_key_file = {{ opflex_apic_private_key_file }}
+certificate_name = {{ opflex_apic_certificate_name }}
+verify_ssl_certificate = False
+scope_names = True
+{% else %}
+apic_password = {{ opflex_apic_password }}
+{% endif %}
+apic_use_ssl = {{ opflex_apic_use_ssl | bool }}

@@ -106,3 +106,26 @@ neutron_remove_distro_packages:
 neutron_oslomsg_amqp1_distro_packages:
   - libsasl2-modules
   - sasl2-bin
+
+_neutron_keepalived_no_track: "{{ (ansible_distribution_major_version is version('20', '>=') or ansible_distribution | lower == 'debian') }}"
+
+###
+# Opflex Configuration
+#
+neutron_opflex_distro_agent_packages:
+  - name: lldpd
+  - name: prometheus-cpp
+neutron_opflex_distro_ovs_agent_packages:
+  - name: opflex-agent
+  - name: opflex-agent-renderer-openvswitch
+  - name: openvswitch-common
+  - name: openvswitch-switch
+  - name: supervisor
+
+opflex_apt_repo_url: "http://localhost/ubuntu"
+opflex_repo:
+  repo: "deb [trusted=yes] {{ opflex_apt_repo_url }} {{ ansible_distribution_release }} main"
+  state: present
+
+opflex_dhclient_conf_target: "/etc/dhcp/dhclient.conf"
+
