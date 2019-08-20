@@ -25,6 +25,10 @@ executor_thread_pool_size = {{ neutron_rpc_thread_pool_size }}
 rpc_response_timeout = {{ neutron_rpc_response_timeout }}
 transport_url = rabbit://{% for host in neutron_rabbitmq_servers.split(',') %}{{ neutron_rabbitmq_userid }}:{{ neutron_rabbitmq_password }}@{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% else %}/{{ neutron_rabbitmq_vhost }}{% endif %}{% endfor %}
 
+# Cisco OPFLEX system_id, this is not set in prod and can not be changed easily later
+{% if "test" in env %}
+apic_system_id = {{ opflex_apic_system_id }}
+{% endif %}
 
 # Domain to use for building hostnames
 dns_domain = {{ neutron_dns_domain }}

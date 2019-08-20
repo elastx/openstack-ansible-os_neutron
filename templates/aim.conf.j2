@@ -4,6 +4,10 @@ debug = {{ debug }}
 rpc_backend = rabbit
 control_exchange = neutron
 #default_log_levels = neutron.context=ERROR
+# Cisco OPFLEX system_id, this is not set in prod and can not be changed easily later
+{% if "test" in env %}
+apic_system_id = {{ opflex_apic_system_id }}
+{% endif %}
 
 [oslo_messaging_rabbit]
 rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
