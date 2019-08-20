@@ -96,12 +96,15 @@
       state: "True"
     - name: "need_db_contract"
       state: "True"
+    - name: "need_aim_upgrade"
+      state: "True"
   when: (install_packages is changed) or
         (ansible_local is not defined) or
         ('openstack_ansible' not in ansible_local) or
         ('neutron' not in ansible_local['openstack_ansible']) or
         ('need_db_expand' not in ansible_local['openstack_ansible']['neutron']) or
-        ('need_db_contract' not in ansible_local['openstack_ansible']['neutron'])
+        ('need_db_contract' not in ansible_local['openstack_ansible']['neutron']) or
+        ('need_aim_upgrade' not in ansible_local['openstack_ansible']['neutron'])
 
 - name: Ensure Open vSwitch service is started and enabled
   service:

@@ -187,6 +187,14 @@
     - neutron-config
     - uwsgi
 
+- name: Setup opflex
+  include: opflex.yml
+  static: no
+  when:
+    - "neutron_plugin_type == 'ml2.opflex'"
+  tags:
+    - neutron-config
+
 - include_role:
     name: openstack.osa.service_setup
     apply:
