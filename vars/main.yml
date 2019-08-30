@@ -270,7 +270,7 @@ neutron_ml2_mechanism_drivers: >-
   {%- if neutron_l2_population | bool -%}
     {%- if _var.append('l2population') -%}{%- endif -%}
   {%- endif -%}
-  {{ _var | join(',') }}
+#  {{ _var | join(',') }}
 
 # OVS
 _neutron_non_tunnel_types:
@@ -663,11 +663,11 @@ neutron_services:
    start_order: 2
  opflex-ovs-agent:
    group: neutron_opflex_agent
-   service_name: agent-ovs
+   service_name: opflex-agent
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    system_user: root
    system_group: root
-   program_override: /usr/bin/agent_ovs
+   program_override: /usr/bin/opflex-agent
    config_options: "--syslog -c {{ opflex_agent_ovs_conf_dir }}/opflex-agent-ovs.conf -c {{ opflex_agent_ovs_conf_dir }}/conf.d"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"

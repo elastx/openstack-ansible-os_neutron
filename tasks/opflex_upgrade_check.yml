@@ -1,0 +1,13 @@
+---
+- name: Stop old agent-ovs service
+  service:
+    name: "agent-ovs"
+    state: stopped
+    enabled: no
+  when: "neutron_services['opflex-ovs-agent']['group'] in group_names"
+
+- name: Uninstall old agent-ovs package
+  package:
+    name: opflex-agent-ovs
+    state: absent
+  when: "neutron_services['opflex-ovs-agent']['group'] in group_names"
