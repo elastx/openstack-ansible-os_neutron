@@ -180,6 +180,7 @@ opflex_vlan_trunk_iface: eth11
 opflex_agent_ovs_conf_dir: /etc/opflex-agent-ovs
 
 opflex_apic_system_id: "openstack"
+opflex_apic_default_system_id: "{{ opflex_apic_system_id }}"
 opflex_apic_hosts:
   - 10.0.0.1
   - 10.0.0.2
