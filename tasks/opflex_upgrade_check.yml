@@ -6,8 +6,9 @@
     enabled: no
   when: "neutron_services['opflex-ovs-agent']['group'] in group_names"
 
-- name: Uninstall old agent-ovs package
-  package:
-    name: opflex-agent-ovs
-    state: absent
-  when: "neutron_services['opflex-ovs-agent']['group'] in group_names"
+# No need to uninstall, package have alias to old package name
+#- name: Uninstall old agent-ovs package
+#  package:
+#    name: agent-ovs
+#    state: absent
+#  when: "neutron_services['opflex-ovs-agent']['group'] in group_names"

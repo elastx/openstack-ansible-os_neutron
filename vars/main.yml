@@ -667,7 +667,7 @@ neutron_services:
    service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
    system_user: root
    system_group: root
-   program_override: /usr/bin/opflex-agent
+   program_override: /usr/bin/opflex_agent
    config_options: "--syslog -c {{ opflex_agent_ovs_conf_dir }}/opflex-agent-ovs.conf -c {{ opflex_agent_ovs_conf_dir }}/conf.d"
    config_type: "ini"
    init_config_overrides: "{{ neutron_opflex_ovs_agent_init_overrides }}"
