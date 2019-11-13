@@ -70,6 +70,7 @@ neutron_opflex_distro_agent_packages:
   - lldpd
 neutron_opflex_distro_ovs_agent_packages:
   - opflex-agent
+  - opflex-agent-renderer-openvswitch
   - openvswitch-common
   - openvswitch-switch
   - supervisor
