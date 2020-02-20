@@ -131,6 +131,9 @@
     group: "root"
     mode: "0644"
   register: dhclient_config
+  when:
+    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
+    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
   tags:
     - opflex-config
 
