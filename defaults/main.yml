@@ -48,7 +48,7 @@ neutron_vpnaas_git_repo: https://git.openstack.org/openstack/neutron-vpnaas
 neutron_vpnaas_git_install_branch: "stable/queens"
 neutron_dynamic_routing_git_repo: https://git.openstack.org/openstack/neutron-dynamic-routing
 neutron_dynamic_routing_git_install_branch: "stable/queens"
-networking_calico_git_repo: https://git.openstack.org/openstack/networking-calico
+networking_calico_git_repo: https://github.com/projectcalico/networking-calico
 networking_calico_git_install_branch: master # no "stable/queens" branch
 dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
 dragonflow_git_install_branch: master # no "stable/queens" branch
