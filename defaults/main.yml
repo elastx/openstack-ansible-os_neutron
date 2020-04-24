@@ -38,25 +38,25 @@ neutron_log_dir: "/var/log/neutron"
 neutron_pip_package_state: "latest"
 
 # Source git repo/branch settings
-neutron_git_repo: https://git.openstack.org/openstack/neutron
+neutron_git_repo: https://opendev.org/openstack/neutron
 neutron_git_install_branch: "stable/queens"
-neutron_fwaas_git_repo: https://git.openstack.org/openstack/neutron-fwaas
+neutron_fwaas_git_repo: https://opendev.org/openstack/neutron-fwaas
 neutron_fwaas_git_install_branch: "stable/queens"
-neutron_lbaas_git_repo: https://git.openstack.org/openstack/neutron-lbaas
+neutron_lbaas_git_repo: https://opendev.org/openstack/neutron-lbaas
 neutron_lbaas_git_install_branch: "stable/queens"
-neutron_vpnaas_git_repo: https://git.openstack.org/openstack/neutron-vpnaas
+neutron_vpnaas_git_repo: https://opendev.org/openstack/neutron-vpnaas
 neutron_vpnaas_git_install_branch: "stable/queens"
-neutron_dynamic_routing_git_repo: https://git.openstack.org/openstack/neutron-dynamic-routing
+neutron_dynamic_routing_git_repo: https://opendev.org/openstack/neutron-dynamic-routing
 neutron_dynamic_routing_git_install_branch: "stable/queens"
-networking_calico_git_repo: https://git.openstack.org/openstack/networking-calico
+networking_calico_git_repo: https://github.com/projectcalico/networking-calico
 networking_calico_git_install_branch: master # no "stable/queens" branch
-dragonflow_git_repo: https://git.openstack.org/openstack/dragonflow
+dragonflow_git_repo: https://opendev.org/openstack/dragonflow
 dragonflow_git_install_branch: master # no "stable/queens" branch
-networking_odl_git_repo: https://git.openstack.org/openstack/networking-odl
+networking_odl_git_repo: https://opendev.org/openstack/networking-odl
 networking_odl_git_install_branch: "stable/queens"
-networking_sfc_git_repo: https://git.openstack.org/openstack/networking-sfc
+networking_sfc_git_repo: https://opendev.org/openstack/networking-sfc
 networking_sfc_git_install_branch: "stable/queens"
-networking_bgpvpn_git_repo: https://git.openstack.org/openstack/networking-bgpvpn
+networking_bgpvpn_git_repo: https://opendev.org/openstack/networking-bgpvpn
 networking_bgpvpn_git_install_branch: "stable/queens"
 
 # Cisco ACI Opflex integration
