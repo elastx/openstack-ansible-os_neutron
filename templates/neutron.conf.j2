@@ -140,6 +140,18 @@ ipv4_ptr_zone_prefix_size = {{ neutron_ipv4_ptr_zone_prefix_size }}
 ipv6_ptr_zone_prefix_size = {{ neutron_ipv6_ptr_zone_prefix_size }}
 {% endif %}
 
+[placement]
+auth_type = password
+username = {{ neutron_service_user_name }}
+password = {{ neutron_service_password }}
+project_name = {{ neutron_service_project_name }}
+user_domain_id = {{ neutron_service_user_domain_id }}
+project_domain_id = {{ neutron_service_project_domain_id }}
+region_name = {{ neutron_service_region }}
+auth_url = {{ keystone_service_adminurl }}
+insecure = {{ keystone_service_adminuri_insecure | bool }}
+endpoint_type = internal
+
 [nova]
 auth_type = {{ nova_keystone_auth_plugin }}
 auth_url = {{ keystone_service_adminurl }}

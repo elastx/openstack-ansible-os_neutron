@@ -69,6 +69,12 @@
   when:
     - neutron_services['neutron-dhcp-agent']['group'] in group_names
 
+- name: Create symlink to neutron-keepalived-state-change
+  file:
+    src: "{{ neutron_bin }}/neutron-keepalived-state-change"
+    dest: "/usr/local/bin/neutron-keepalived-state-change"
+    state: link
+
 - name: Generate neutron agent only Config
   config_template:
     src: "{{ item.service_conf }}.j2"

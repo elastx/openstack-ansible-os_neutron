@@ -213,7 +213,7 @@ neutron_plugins:
     drivers_type: "{{ neutron_ml2_drivers_type }}"
     l2_population: "{{ neutron_l2_population }}"
     mechanisms: "openvswitch"
-    l3_agent_mode: "{% if 'nova_compute' in group_names %}dvr{% else %}dvr_snat{% endif %}"
+    l3_agent_mode: "{% if 'network_hosts' in group_names %}dvr_snat{% else %}dvr{% endif %}"
     router_distributed: True
     plugin_conf_ini_overrides: "{{ neutron_ml2_conf_ini_overrides }}"
     plugin_core: ml2
