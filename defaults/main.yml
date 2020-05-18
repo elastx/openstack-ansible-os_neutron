@@ -59,11 +59,13 @@ networking_sfc_git_install_branch: "stable/queens"
 networking_bgpvpn_git_repo: https://opendev.org/openstack/networking-bgpvpn
 networking_bgpvpn_git_install_branch: "stable/queens"
 
-# Cisco ACI Opflex integration
+# Cisco ACI Opflex integration (as of AIM plugin version 4.1.2-queens-20190708)
 group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
 group_based_policy_git_install_branch: 8.3.3
 group_based_policy_client_git_repo: https://github.com/noironetworks/python-group-based-policy-client
 group_based_policy_client_git_install_branch: 4.0.1
+group_based_policy_automation_git_repo: https://github.com/noironetworks/group-based-policy-automation
+group_based_policy_automation_git_install_branch: 8.0.2
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.14.7
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
