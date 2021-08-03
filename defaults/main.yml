@@ -66,8 +66,8 @@ group_based_policy_client_git_repo: https://github.com/noironetworks/python-grou
 group_based_policy_client_git_install_branch: 4.0.1
 group_based_policy_automation_git_repo: https://github.com/noironetworks/group-based-policy-automation
 group_based_policy_automation_git_install_branch: 8.0.2
-opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
-opflex_aci_integration_module_git_install_branch: 0.14.8
+opflex_aci_integration_module_git_repo: https://github.com/elastx/aci-integration-module
+opflex_aci_integration_module_git_install_branch: 0.14.8-cert
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.6.4
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
