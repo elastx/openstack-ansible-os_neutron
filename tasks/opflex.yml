@@ -188,6 +188,21 @@
   tags:
     - opflex-aim-config
 
+- name: Deploy aci client certificate for aim service
+  copy:
+    content: "{{ opflex_apic_private_key }}"
+    dest: "{{ opflex_apic_private_key_file }}"
+    owner: "root"
+    group: "{{ item.group|default(neutron_system_group_name) }}"
+    mode: "0640"
+  notify: Restart neutron services
+  when:
+    - opflex_apic_private_key is defined
+    - opflex_apic_private_key_file is defined
+    - "neutron_services['opflex-aim-aid']['group'] in group_names"
+  tags:
+    - opflex-aim-config
+
 - name: Copy aim service config
   config_template:
     src: "{{ item.src }}"

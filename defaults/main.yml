@@ -217,6 +217,9 @@ opflex_apic_remote_ip: 10.0.0.32
 opflex_apic_user: opflex
 opflex_apic_password: opflex
 opflex_apic_use_ssl: True
+#opflex_apic_private_key: ''
+#opflex_apic_private_key_file: ''
+#opflex_apic_certificate_name: ''
 opflex_apic_vmdom: ostack
 opflex_apic_entity_profile: ostack_entity
 opflex_apic_switch_pg_name: openstack_sw_pg
