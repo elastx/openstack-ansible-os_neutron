@@ -193,7 +193,7 @@
     content: "{{ opflex_apic_private_key }}"
     dest: "{{ opflex_apic_private_key_file }}"
     owner: "root"
-    group: "{{ item.group|default(neutron_system_group_name) }}"
+    group: "{{ neutron_system_group_name }}"
     mode: "0640"
   notify: Restart neutron services
   when:
