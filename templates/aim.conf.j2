@@ -32,7 +32,7 @@ websocket_subscription_timeout = {{ opflex_websocket_subscription_timeout }}
 [apic]
 apic_hosts = {{ opflex_apic_hosts | join(',') }}
 apic_username = {{ opflex_apic_user }}
-{% if opflex_apic_private_key_file and opflex_apic_certificate_name %}
+{% if opflex_apic_private_key_file is defined and opflex_apic_certificate_name is defined %}
 private_key_file = {{ opflex_apic_private_key_file }}
 certificate_name = {{ opflex_apic_certificate_name }}
 {% else %}
