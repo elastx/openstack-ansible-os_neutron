@@ -36,6 +36,8 @@ apic_username = {{ opflex_apic_user }}
 {% if opflex_apic_private_key_file is defined and opflex_apic_certificate_name is defined %}
 private_key_file = {{ opflex_apic_private_key_file }}
 certificate_name = {{ opflex_apic_certificate_name }}
+verify_ssl_certificate = False
+scope_names = True
 {% else %}
 apic_password = {{ opflex_apic_password }}
 {% endif %}
