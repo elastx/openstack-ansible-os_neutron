@@ -73,6 +73,8 @@ opflex_apic_api_git_install_branch: 1.7.0
 opflex_agent_git_repo: https://github.com/elastx/python-opflex-agent
 opflex_agent_git_install_branch: elx-8.3.0
 opflex_agent_git_package_name: neutron-opflex-agent
+opflex_acitoolkit_git_repo: https://github.com/noironetworks/acitoolkit
+opflex_acitoolkit_git_install_branch: noiro-lite
 
 # Developer mode
 neutron_developer_mode: false
