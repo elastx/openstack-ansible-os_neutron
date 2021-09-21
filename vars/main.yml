@@ -146,6 +146,7 @@ neutron_developer_constraints:
   - "git+{{ opflex_apic_ml2_driver_git_repo }}@{{ opflex_apic_ml2_driver_git_install_branch }}#egg=neutron-ml2-driver-apic"
   - "git+{{ opflex_apic_api_git_repo }}@{{ opflex_apic_api_git_install_branch }}#egg=apicapi"
   - "git+{{ opflex_agent_git_repo }}@{{ opflex_agent_git_install_branch }}#egg=neutron-opflex-agent"
+  - "git+{{ opflex_acitoolkit_git_repo }}@{{ opflex_acitoolkit_git_install_branch }}#egg=acitoolkit"
 
 neutron_bin: "/openstack/venvs/neutron-{{ neutron_venv_tag }}/bin"
 
