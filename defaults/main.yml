@@ -72,11 +72,11 @@ openstack_ceilometer_git_install_branch: 'stable/train'
 networking_ovn_git_repo: https://git.openstack.org/openstack/networking-ovn
 networking_ovn_git_install_branch: 'stable/train'
 
-# Cisco ACI Opflex integration (as of AIM plugin version 4.2.1-train-20210623)
+# Cisco ACI Opflex integration (as of AIM plugin version 5.1.3-train-20210217)
 group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
-group_based_policy_git_install_branch: 11.5.0
+group_based_policy_git_install_branch: 11.3.0
 group_based_policy_client_git_repo: https://github.com/noironetworks/python-group-based-policy-client
-group_based_policy_client_git_install_branch: 7.4.0
+group_based_policy_client_git_install_branch: 7.2.0
 group_based_policy_automation_git_repo: https://github.com/noironetworks/group-based-policy-automation
 group_based_policy_automation_git_install_branch: 11.1.0
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
@@ -84,10 +84,10 @@ opflex_aci_integration_module_git_install_branch: 0.17.0
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.7.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 11.4.0
+opflex_agent_git_install_branch: 11.3.0
 opflex_agent_git_package_name: neutron-opflex-agent
 opflex_acitoolkit_git_repo: https://github.com/noironetworks/acitoolkit
-opflex_acitoolkit_git_install_branch: noiro-lite
+opflex_acitoolkit_git_install_branch: 0.3.3
 
 # Developer mode
 neutron_developer_mode: false
