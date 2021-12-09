@@ -43,6 +43,7 @@ neutron_pip_packages:
   - python-neutronclient
   - python-novaclient
   - repoze.lru
+  - setproctitle
 
 neutron_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
