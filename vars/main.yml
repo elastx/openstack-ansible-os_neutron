@@ -43,7 +43,6 @@ neutron_pip_packages:
   - python-neutronclient
   - python-novaclient
   - repoze.lru
-  - setproctitle
 
 neutron_optional_oslomsg_amqp1_pip_packages:
   - oslo.messaging[amqp1]
@@ -92,6 +91,7 @@ neutron_optional_opflex_pip_packages:
   - pyOpenSSL
   - python-group-based-policy-client
   - SQLAlchemy>=1.1.12
+  - setproctitle
 
 neutron_developer_constraints:
   - "git+{{ neutron_git_repo }}@{{ neutron_git_install_branch }}#egg=neutron"
