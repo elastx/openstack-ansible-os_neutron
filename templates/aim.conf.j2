@@ -7,12 +7,12 @@ control_exchange = neutron
 apic_system_id = {{ opflex_apic_default_system_id }}
 
 [oslo_messaging_rabbit]
-rabbit_hosts = {% for host in neutron_rabbitmq_servers.split(',') %}{{ host }}:{{ neutron_rabbitmq_port }}{% if not loop.last %},{% endif %}{% endfor %}
+rabbit_hosts = {% for host in neutron_oslomsg_rpc_servers.split(',') %}{{ host }}:{{ neutron_oslomsg_rpc_port }}{% if not loop.last %},{% endif %}{% endfor %}
 
-rabbit_userid = {{ neutron_rabbitmq_userid }}
-rabbit_password = {{ neutron_rabbitmq_password }}
-rabbit_use_ssl = {{ neutron_rabbitmq_use_ssl }}
-rabbit_virtual_host = {{ neutron_rabbitmq_vhost }}
+rabbit_userid = {{ neutron_oslomsg_rpc_userid }}
+rabbit_password = {{ neutron_oslomsg_rpc_password }}
+rabbit_use_ssl = {{ neutron_oslomsg_rpc_use_ssl }}
+rabbit_virtual_host = {{ neutron_oslomsg_rpc_vhost }}
 rpc_conn_pool_size = {{ neutron_rpc_conn_pool_size }}
 
 [database]
