@@ -123,27 +123,6 @@
     - opflex-install
     - opflex-agent-pip-packages
 
-- name: Copy dhclient config
-  template:
-    src: "dhclient.conf.j2"
-    dest: "{{ opflex_dhclient_conf_target }}"
-    owner: "root"
-    group: "root"
-    mode: "0644"
-  register: dhclient_config
-  when:
-    - "neutron_services['opflex-neutron-agent']['group'] in group_names"
-    - "neutron_services['opflex-ovs-agent']['group'] in group_names"
-  tags:
-    - opflex-config
-
-- name: Cycle apic interface
-  shell: |
-    ifdown {{ opflex_uplink_iface }} && ifup {{ opflex_uplink_iface }}
-  when: dhclient_config.changed
-  tags:
-    - opflex-config
-
 - name: Copy apic plugin config
   config_template:
     src: "plugins/ml2/ml2_conf_cisco_apic.ini.j2"
