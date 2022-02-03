@@ -112,6 +112,7 @@ _neutron_lbaasv2_user_group: nogroup
 #
 neutron_opflex_distro_agent_packages:
   - lldpd
+  - prometheus-cpp
 neutron_opflex_distro_ovs_agent_packages:
   - opflex-agent
   - opflex-agent-renderer-openvswitch
