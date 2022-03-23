@@ -226,6 +226,7 @@ neutron_plugins:
     mechanisms: "apic_aim"
     plugin_conf_ini_overrides: "{{ neutron_ml2_conf_ini_overrides }}"
     plugin_core: "ml2plus"
+    plugin_ini: plugins/ml2/ml2_conf.ini
 
 ###
 ### ML2 Plugin Configuration
