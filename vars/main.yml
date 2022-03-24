@@ -78,7 +78,6 @@ neutron_optional_opflex_pip_packages:
   - aci-integration-module
   - apicapi
   - group-based-policy
-  - neutron-ml2-driver-apic
   - pyOpenSSL
   - python-group-based-policy-client
   - SQLAlchemy>=1.1.12
