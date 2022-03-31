@@ -81,6 +81,7 @@ neutron_optional_opflex_pip_packages:
   - pyOpenSSL
   - python-group-based-policy-client
   - SQLAlchemy>=1.1.12
+  - neutron-opflex-agent
 
 neutron_venv_packages: >-
   {%- set pkg_list = neutron_pip_packages | union(neutron_user_pip_packages) %}
@@ -548,7 +549,7 @@ neutron_services:
     group: neutron_opflex_aim_agent
     service_name: aim-aid
     service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-    execstarts: "{{ neutron_bin }}/aim-aid --config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-aid.log"
+    execstarts: "{{ neutron_bin }}/aim-aid --config-file=/etc/aim/aim.conf --use-journal"
     config_type: "ini"
     init_config_overrides: "{{ neutron_opflex_aim_aid_init_overrides }}"
     start_order: 3
@@ -556,7 +557,7 @@ neutron_services:
     group: neutron_opflex_aim_agent
     service_name: aim-event-service-polling
     service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-    execstarts: "{{ neutron_bin }}/aim-event-service-polling --config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-event-service-polling.log"
+    execstarts: "{{ neutron_bin }}/aim-event-service-polling --config-file=/etc/aim/aim.conf --use-journal"
     config_type: "ini"
     init_config_overrides: "{{ neutron_opflex_aim_event_service_polling_init_overrides }}"
     start_order: 3
@@ -564,7 +565,7 @@ neutron_services:
     group: neutron_opflex_aim_agent
     service_name: aim-event-service-rpc
     service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-    execstarts: "{{ neutron_bin }}/aim-event-service-rpc --config-file=/etc/aim/aim.conf --log-file=/var/log/neutron/aim-event-service-rpc.log"
+    execstarts: "{{ neutron_bin }}/aim-event-service-rpc --config-file=/etc/aim/aim.conf --use-journal"
     config_type: "ini"
     init_config_overrides: "{{ neutron_opflex_aim_event_service_rpc_init_overrides }}"
     start_order: 3
@@ -573,7 +574,7 @@ neutron_services:
     service_name: neutron-cisco-apic-host-agent
     service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
     service_rootwrap: rootwrap.d/cisco-apic.filters
-    execstarts: "{{ neutron_bin }}/neutron-cisco-apic-host-agent --config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini --log-file=/var/log/neutron/cisco-apic-host-agent.log"
+    execstarts: "{{ neutron_bin }}/neutron-cisco-apic-host-agent --config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/opflex-agent/apic_topology_service.ini --use-journal"
     init_config_overrides: "{{ neutron_opflex_apic_host_agent_init_overrides }}"
     start_order: 2
   opflex-mcast-agent:
@@ -589,7 +590,7 @@ neutron_services:
     group: neutron_opflex_agent
     service_name: neutron-opflex-agent
     service_en: "{{ neutron_plugin_type == 'ml2.opflex' }}"
-    execstarts: "{{ neutron_bin }}/neutron-opflex-agent --config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf.ini --log-file=/var/log/neutron/opflex-agent.log"
+    execstarts: "{{ neutron_bin }}/neutron-opflex-agent --config-file={{ neutron_conf_dir }}/neutron.conf --config-file={{ neutron_conf_dir }}/plugins/ml2/ml2_conf.ini --use-journal"
     init_config_overrides: "{{ neutron_opflex_agent_init_overrides }}"
     start_order: 2
   opflex-ovs-agent:
