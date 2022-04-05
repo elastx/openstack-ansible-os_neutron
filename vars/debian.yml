@@ -106,14 +106,14 @@ neutron_oslomsg_amqp1_distro_packages:
 # Opflex Configuration
 #
 neutron_opflex_distro_agent_packages:
-  - lldpd
-  - prometheus-cpp
+  - name: lldpd
+  - name: prometheus-cpp
 neutron_opflex_distro_ovs_agent_packages:
-  - opflex-agent
-  - opflex-agent-renderer-openvswitch
-  - openvswitch-common
-  - openvswitch-switch
-  - supervisor
+  - name: opflex-agent
+  - name: opflex-agent-renderer-openvswitch
+  - name: openvswitch-common
+  - name: openvswitch-switch
+  - name: supervisor
 
 opflex_apt_repo_url: "http://localhost/ubuntu"
 opflex_repo:

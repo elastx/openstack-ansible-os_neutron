@@ -49,12 +49,30 @@
     - opflex-install
     - opflex-distro-packages
 
-- name: Install opflex distro packages
+- name: Install opflex distro packages (neutron-agent)
   package:
-    name: "{{ neutron_opflex_package_list }}"
-    state: "{{ neutron_package_state }}"
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(neutron_package_state) }}"
     update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
     cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  with_items:
+    - "{{ neutron_opflex_distro_agent_packages }}"
+  when:
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
+  tags:
+    - opflex-install
+    - opflex-distro-packages
+
+- name: Install opflex distro packages (Compute)
+  package:
+    name: "{{ item.name }}"
+    state: "{{ item.state | default(neutron_package_state) }}"
+    update_cache: "{{ (ansible_pkg_mgr in ['apt', 'zypper']) | ternary('yes', omit) }}"
+    cache_valid_time: "{{ (ansible_pkg_mgr == 'apt') | ternary(cache_timeout, omit) }}"
+  with_items:
+    - "{{ neutron_opflex_distro_ovs_agent_packages }}"
+  when:
+    - neutron_services['opflex-ovs-agent']['group'] in group_names
   tags:
     - opflex-install
     - opflex-distro-packages
