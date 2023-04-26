@@ -40,7 +40,7 @@
     repo: "{{ opflex_repo.repo }}"
     state: "{{ opflex_repo.state }}"
   register: opflex_add_repo
-  until: opflex_add_repo|success
+  until: opflex_add_repo is not failed
   retries: 5
   delay: 2
   when:
@@ -228,7 +228,7 @@
   when:
     - "inventory_hostname == groups[neutron_services['neutron-server']['group']][0]"
     - "neutron_services['opflex-aim-aid']['group'] in group_names"
-    - (aim_config | changed) or
+    - (aim_config is changed) or
       (ansible_local['openstack_ansible']['neutron']['need_aim_upgrade'] | bool)
 
 - name: Perform aim hashtree reset
