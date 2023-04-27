@@ -113,12 +113,31 @@ _neutron_keepalived_no_track: "{{ (ansible_distribution_major_version is version
 neutron_opflex_distro_agent_packages:
   - name: lldpd
   - name: prometheus-cpp
-neutron_opflex_distro_ovs_agent_packages:
+
+# The versions below are from dist-debs-5.2.7-ussuri-20230402-bionic.tar.gz
+neutron_opflex_distro_ovs_agent_packages_bionic: # Ubuntu 18.04
+  - name: libopflex=2.5.0-25~bionic
+    state: present
+  - name: libmodelgbp=2.5.0-25~bionic
+    state: present
+  - name: libopflex-agent=2.5.0-25~bionic
+    state: present
+  - name: opflex-agent=2.5.0-25~bionic
+    state: present
+  - name: opflex-agent-renderer-openvswitch=2.5.0-25~bionic
+    state: present
+  - name: openvswitch-common
+  - name: openvswitch-switch
+  - name: supervisor
+
+neutron_opflex_distro_ovs_agent_packages_focal: # Ubuntu 20.04
   - name: opflex-agent
   - name: opflex-agent-renderer-openvswitch
   - name: openvswitch-common
   - name: openvswitch-switch
   - name: supervisor
+
+neutron_opflex_distro_ovs_agent_packages: "{% if ansible_facts['distribution_version'] is version('20.04', '<') %}{{ neutron_opflex_distro_ovs_agent_packages_bionic }}{% else %}{{ neutron_opflex_distro_ovs_agent_packages_focal }}{% endif %}"
 
 opflex_apt_repo_url: "http://localhost/ubuntu"
 opflex_repo:
