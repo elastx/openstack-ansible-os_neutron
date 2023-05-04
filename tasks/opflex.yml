@@ -283,15 +283,18 @@
     filter: ansible_local
     gather_subset: "!all"
 
-- name: Ensure neutron opflex-agent config directory exists
+- name: Ensure neutron opflex-agent config and log directory exists
   file:
-    path: "{{ neutron_conf_dir }}/opflex-agent"
+    path: "{{ item }}"
     state: directory
     owner: root
     group: "{{ neutron_system_group_name }}"
     mode: "0755"
   when:
     - "neutron_services['opflex-apic-host-agent']['group'] in group_names"
+  with_items:
+    - "{{ neutron_conf_dir }}/opflex-agent"
+    - "/var/log/neutron"
   tags:
     - opflex-config
 
