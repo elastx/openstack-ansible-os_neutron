@@ -25,6 +25,7 @@ max_operation_retry = 5
 error_state_recovery_interval = 3600
 websocket_subscription_timeout = {{ opflex_websocket_subscription_timeout }}
 agent_deadlock_time = 300
+unix_socket_path = /run/aim-aid/aid-events.sock
 
 [apic]
 apic_hosts = {{ opflex_apic_hosts | join(',') }}
