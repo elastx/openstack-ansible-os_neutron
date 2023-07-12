@@ -295,7 +295,6 @@
   with_items:
     - "{{ neutron_conf_dir }}/opflex-agent"
     - "/var/log/neutron"
-    - "/var/lib/opflex-agent-dns-cahce"
   tags:
     - opflex-config
 
