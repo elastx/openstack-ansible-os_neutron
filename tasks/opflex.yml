@@ -295,6 +295,7 @@
   with_items:
     - "{{ neutron_conf_dir }}/opflex-agent"
     - "/var/log/neutron"
+    - "/run/opflex-agent/dns"
   tags:
     - opflex-config
 
