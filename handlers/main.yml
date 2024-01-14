@@ -139,3 +139,9 @@
   service:
     name: "{{ neutron_ovn_northd_service_name }}"
     state: restarted
+
+- name: Restart elx-netbilling
+  service:
+    name: elx_netbilling_agent
+    state: restarted
+    daemon_reload: yes
