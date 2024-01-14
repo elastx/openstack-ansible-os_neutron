@@ -224,5 +224,7 @@
   tags:
     - neutron-config
 
+- import_tasks: elx_netbilling.yml
+
 - name: Flush handlers
   meta: flush_handlers
