@@ -1,0 +1,12 @@
+[Unit]
+Description=ELX Net Billing Agent
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart={{ elx_netbilling_path }} start --blacklist-cidr-json {{ elx_netbilling_path }}.conf --file-path {{ elx_netbilling_statedir_path }}/saved_state
+EnvironmentFile=/root/netbilling-openrc
+Restart=on-failure
+RestartPreventExitStatus=1

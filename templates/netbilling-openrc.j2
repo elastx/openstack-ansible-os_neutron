@@ -1,0 +1,19 @@
+# Ansible managed
+LC_ALL=en_US.UTF-8
+
+# COMMON OPENSTACK ENVS
+OS_ENDPOINT_TYPE=internalURL
+OS_INTERFACE=internalURL
+OS_USERNAME={{ elx_netbilling_credentials.username }}
+OS_PASSWORD={{ elx_netbilling_credentials.password }}
+OS_PROJECT_NAME={{ elx_netbilling_credentials.username }}
+OS_TENANT_NAME={{ elx_netbilling_credentials.username }}
+OS_AUTH_TYPE=password
+OS_AUTH_URL=http://{{ internal_lb_vip_address }}:5000/v3
+OS_USER_DOMAIN_NAME=Default
+OS_PROJECT_DOMAIN_NAME=Default
+OS_REGION_NAME=se-sto
+
+# For openstackclient
+OS_IDENTITY_API_VERSION=3
+OS_AUTH_VERSION=3
