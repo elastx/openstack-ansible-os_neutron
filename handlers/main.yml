@@ -76,3 +76,8 @@
   listen:
     - "Restart neutron services"
     - "venv changed"
+
+- name: Restart elx-netbilling
+  ansible.builtin.service:
+    name: elx-netbilling-agent
+    state: restarted
