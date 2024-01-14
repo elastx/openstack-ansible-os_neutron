@@ -13,6 +13,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#+-----------+
+#+ ELX Stuff +
+#+-----------+
+
+elx_netbilling_filter_networks: []
+elx_netbilling_repo: "elx-netbilling-agent"
+elx_netbilling_path: "/usr/local/bin/elx-netbilling-agent"
+elx_netbilling_statedir_path: "/var/lib/elx_netbilling_agent"
+sflow_bridges:
+  - "br-int"
+  - "br-fabric"
+elx_netbilling_filter_networks:
+  - '88.80.0.0/20'
+  - '88.80.174.0/24'
+  - '91.197.40.0/22'
+  - '185.24.132.0/22'
+  - '185.141.28.0/22'
+  - '192.121.20.0/24'
+  - '192.121.165.0/24'
+  - '212.237.144.0/21'
+  - '217.61.244.0/22'
+  - '127.0.0.0/8'
+  - '169.254.0.0/16'
+  - '192.168.0.0/16'
+  - '172.16.0.0/12'
+  - '10.0.0.0/8'
+  - '100.64.0.0/10'
+  - '224.0.0.0/4'
+  - '240.0.0.0/4'
 ###
 ### Verbosity Options
 ###

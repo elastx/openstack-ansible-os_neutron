@@ -201,5 +201,12 @@
   tags:
     - neutron-config
 
+# Install the elx netbilling agent on hypervisors
+- import_tasks: elx_netbilling.yml
+  when:
+    - "neutron_plugin_type == 'ml2.opflex'"
+  tags:
+    - elx-netbilling
+
 - name: Flush handlers
   meta: flush_handlers
