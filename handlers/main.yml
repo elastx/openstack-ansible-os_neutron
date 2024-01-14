@@ -96,3 +96,9 @@
   listen:
     - "Restart neutron services"
     - "venv changed"
+
+- name: Restart elx-netbilling
+  service:
+    name: elx_netbilling_agent
+    state: restarted
+    daemon_reload: yes
