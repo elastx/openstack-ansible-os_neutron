@@ -6,7 +6,7 @@
     dest: "/etc/systemd/system/elx_netbilling_agent.service"
     owner: "root"
     group: "root"
-    mode: "0640"
+    mode: "0644"
   notify: Restart netbilling service
   tags:
     - elx-netbilling
@@ -17,7 +17,7 @@
     dest: "/root/netbilling-openrc"
     owner: "root"
     group: "root"
-    mode: "0640"
+    mode: "0644"
   tags:
     - elx-netbilling
 
