@@ -21,6 +21,12 @@
   tags:
     - elx-netbilling
 
+- name: Activate sFlow on all Open VSwitch bridges
+  ansible.builtin.shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
+  loop: "{{ sflow_bridges }}"
+  tags:
+    - elx-netbilling
+
 - name: Retrieve URL for latest repo release
   run_once: true
   uri:
