@@ -12,24 +12,26 @@
     - elx-netbilling
 
 - name: Retrieve URL for latest repo release
-  shell:
-    cmd: |
-      'curl -L 
-      -H "Accept: application/vnd.github+json" 
-      -H "Authorization: Bearer {{ elx_github_token }}" 
-      -H "X-GitHub-Api-Version: 2022-11-28" 
-      https://api.github.com/repos/elastx/elx-netbilling-agent/releases/latest'
+  run_once: true
+  uri:
+    url: https://api.github.com/repos/elastx/{{ elx_repo_url }}/releases/latest
+    method: GET
+    headers:
+      Accept: "application/vnd.github+json"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
   register: elx_netbilling_url
   tags:
     - elx-netbilling
 
-- name: Download agent release
-  shell:
-    cmd: |
-      'curl -L 
-      -H "Accept: application/vnd.github+json" 
-      -H "Authorization: Bearer {{ elx_github_token }}" 
-      -H "X-GitHub-Api-Version: 2022-11-28" 
-      {{ elx_netbilling_url.assets_url }} > /usr/local/bin/elx-netbilling-agent'
+- name: Download latest release
+  uri:
+    url: '{{ elx_netbilling_url.json.assets[0].url }}'
+    method: GET
+    dest: "{{ elx_asset_path }}"
+    headers:
+      Accept: "application/octet-stream"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
   tags:
     - elx-netbilling
