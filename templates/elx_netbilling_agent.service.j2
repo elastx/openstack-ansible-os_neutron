@@ -6,5 +6,5 @@ After=network.target
 Type=simple
 User=root
 Group=root
-ExecStart=/usr/local/bin/elx-netbilling-agent
+ExecStart={{ elx_netbilling_path }}
 Restart=always
