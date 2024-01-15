@@ -11,6 +11,16 @@
   tags:
     - elx-netbilling
 
+- name: Configure elx-netbilling OpenRC file
+  config_template:
+    src: "netbilling-openrc.j2"
+    dest: "/root/netbilling-openrc"
+    owner: "root"
+    group: "root"
+    mode: "0640"
+  tags:
+    - elx-netbilling
+
 - name: Retrieve URL for latest repo release
   run_once: true
   uri:
