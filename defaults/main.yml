@@ -13,6 +13,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#+-----------+
+#+ ELX Stuff +
+#+-----------+
+
+elx_netbilling_url: "elx-netbilling-agent"
+elx_netbilling_path: "/usr/local/bin/elx-netbilling-agent"
+
 ###
 ### Verbosity Options
 ###
