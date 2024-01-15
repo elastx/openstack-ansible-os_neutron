@@ -14,7 +14,7 @@
 - name: Retrieve URL for latest repo release
   run_once: true
   uri:
-    url: https://api.github.com/repos/elastx/{{ elx_repo_url }}/releases/latest
+    url: https://api.github.com/repos/elastx/{{ elx_netbilling_repo }}/releases/latest
     method: GET
     headers:
       Accept: "application/vnd.github+json"
@@ -28,7 +28,7 @@
   uri:
     url: '{{ elx_netbilling_url.json.assets[0].url }}'
     method: GET
-    dest: "{{ elx_asset_path }}"
+    dest: "{{ elx_netbilling_path }}"
     headers:
       Accept: "application/octet-stream"
       Authorization: "Bearer {{ elx_github_token_ro }}"
