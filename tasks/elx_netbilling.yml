@@ -22,6 +22,17 @@
   tags:
     - elx-netbilling
 
+- name: Configure elx-netbilling network cidr blacklist
+  config_template:
+    src: "netbilling_blacklist.json.j2"
+    dest: "{{ elx_netbilling_path }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Restart netbilling service
+  tags:
+    - elx-netbilling
+
 - name: Activate sFlow on all Open VSwitch bridges
   ansible.builtin.shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
   loop: "{{ sflow_bridges }}"
