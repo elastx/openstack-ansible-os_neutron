@@ -1,0 +1,66 @@
+---
+
+- name: Configure elx-netbilling service
+  config_template:
+    src: "elx_netbilling_agent.service.j2"
+    dest: "/etc/systemd/system/elx_netbilling_agent.service"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Restart netbilling service
+  tags:
+    - elx-netbilling
+
+- name: Configure elx-netbilling OpenRC file
+  config_template:
+    src: "netbilling-openrc.j2"
+    dest: "/root/netbilling-openrc"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Restart netbilling service
+  tags:
+    - elx-netbilling
+
+- name: Configure elx-netbilling network cidr blacklist
+  config_template:
+    src: "netbilling_blacklist.json.j2"
+    dest: "{{ elx_netbilling_path }}.conf"
+    owner: "root"
+    group: "root"
+    mode: "0644"
+  notify: Restart netbilling service
+  tags:
+    - elx-netbilling
+
+- name: Activate sFlow on all Open VSwitch bridges
+  ansible.builtin.shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
+  loop: "{{ sflow_bridges }}"
+  tags:
+    - elx-netbilling
+
+- name: Retrieve URL for latest repo release
+  run_once: true
+  uri:
+    url: https://api.github.com/repos/elastx/{{ elx_netbilling_repo }}/releases/latest
+    method: GET
+    headers:
+      Accept: "application/vnd.github+json"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
+  register: elx_netbilling_url
+  tags:
+    - elx-netbilling
+
+- name: Download latest release
+  uri:
+    url: '{{ elx_netbilling_url.json.assets[0].url }}'
+    method: GET
+    dest: "{{ elx_netbilling_path }}"
+    headers:
+      Accept: "application/octet-stream"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
+  notify: Restart netbilling service
+  tags:
+    - elx-netbilling
