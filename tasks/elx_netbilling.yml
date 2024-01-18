@@ -1,7 +1,7 @@
 ---
 
 - name: Configure elx-netbilling service
-  config_template:
+  ansible.builtin.template:
     src: "elx_netbilling_agent.service.j2"
     dest: "/etc/systemd/system/elx_netbilling_agent.service"
     owner: "root"
@@ -12,7 +12,7 @@
     - elx-netbilling
 
 - name: Configure elx-netbilling OpenRC file
-  config_template:
+  ansible.builtin.template:
     src: "netbilling-openrc.j2"
     dest: "/root/netbilling-openrc"
     owner: "root"
@@ -23,7 +23,7 @@
     - elx-netbilling
 
 - name: Configure elx-netbilling network cidr blacklist
-  config_template:
+  ansible.builtin.template:
     src: "netbilling_blacklist.json.j2"
     dest: "{{ elx_netbilling_path }}.conf"
     owner: "root"
