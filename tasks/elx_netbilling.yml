@@ -1,35 +1,35 @@
 ---
 
 - name: Configure elx-netbilling service
-  config_template:
+  ansible.builtin.template:
     src: "elx_netbilling_agent.service.j2"
     dest: "/etc/systemd/system/elx_netbilling_agent.service"
     owner: "root"
     group: "root"
     mode: "0644"
-  notify: Restart netbilling service
+  notify: Restart elx-netbilling
   tags:
     - elx-netbilling
 
 - name: Configure elx-netbilling OpenRC file
-  config_template:
+  ansible.builtin.template:
     src: "netbilling-openrc.j2"
     dest: "/root/netbilling-openrc"
     owner: "root"
     group: "root"
     mode: "0644"
-  notify: Restart netbilling service
+  notify: Restart elx-netbilling
   tags:
     - elx-netbilling
 
 - name: Configure elx-netbilling network cidr blacklist
-  config_template:
+  ansible.builtin.template:
     src: "netbilling_blacklist.json.j2"
     dest: "{{ elx_netbilling_path }}.conf"
     owner: "root"
     group: "root"
     mode: "0644"
-  notify: Restart netbilling service
+  notify: Restart elx-netbilling
   tags:
     - elx-netbilling
 
@@ -61,6 +61,6 @@
       Accept: "application/octet-stream"
       Authorization: "Bearer {{ elx_github_token_ro }}"
       X-GitHub-Api-Version: "2022-11-28"
-  notify: Restart netbilling service
+  notify: Restart elx-netbilling
   tags:
     - elx-netbilling
