@@ -39,6 +39,13 @@
   tags:
     - elx-netbilling
 
+- name: Make sure elx-netbilling service is stopped
+  service:
+    name: elx_netbilling_agent
+    state: stopped
+  tags:
+    - elx-netbilling
+
 - name: Retrieve URL for latest repo release
   run_once: true
   uri:
