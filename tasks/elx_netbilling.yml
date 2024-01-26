@@ -64,3 +64,13 @@
   notify: Restart elx-netbilling
   tags:
     - elx-netbilling
+
+- name: Start and enable elx-netbilling agent
+  ansible.builtin.systemd_service:
+    name: elx-netbilling
+    state: started
+    enabled: true
+    daemon_reload: true
+  tags:
+    - elx-netbilling
+
