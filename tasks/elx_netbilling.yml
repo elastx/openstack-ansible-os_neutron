@@ -83,11 +83,10 @@
     - elx-netbilling
 
 - name: Start and enable elx-netbilling agent
-  ansible.builtin.systemd_service:
+  service:
     name: elx_netbilling_agent
     state: started
     enabled: true
     daemon_reload: true
   tags:
     - elx-netbilling
-
