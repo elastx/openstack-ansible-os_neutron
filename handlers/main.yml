@@ -78,6 +78,8 @@
     - "venv changed"
 
 - name: Restart elx-netbilling
-  ansible.builtin.service:
-    name: elx-netbilling-agent
+  ansible.builtin.systemd_service:
+    name: elx_netbilling_agent
     state: restarted
+    daemon_reload: true
+

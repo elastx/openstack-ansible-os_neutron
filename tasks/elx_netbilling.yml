@@ -34,7 +34,7 @@
     - elx-netbilling
 
 - name: Activate sFlow on all Open VSwitch bridges
-  ansible.builtin.shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
+  shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
   loop: "{{ sflow_bridges }}"
   tags:
     - elx-netbilling
@@ -64,3 +64,23 @@
   notify: Restart elx-netbilling
   tags:
     - elx-netbilling
+
+- name: Change permission of billing agent to 755
+  file:
+    path: "{{ elx_netbilling_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+  notify: Restart elx-netbilling
+  tags:
+    - elx-netbilling
+
+- name: Start and enable elx-netbilling agent
+  ansible.builtin.systemd_service:
+    name: elx_netbilling_agent
+    state: started
+    enabled: true
+    daemon_reload: true
+  tags:
+    - elx-netbilling
+
