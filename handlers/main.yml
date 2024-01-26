@@ -79,7 +79,7 @@
 
 - name: Restart elx-netbilling
   ansible.builtin.systemd_service:
-    name: elx-netbilling-agent
+    name: elx_netbilling_agent
     state: restarted
     daemon_reload: true
 
