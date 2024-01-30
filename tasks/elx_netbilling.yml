@@ -39,13 +39,6 @@
   tags:
     - elx-netbilling
 
-- name: Make sure elx-netbilling service is stopped
-  service:
-    name: elx_netbilling_agent
-    state: stopped
-  tags:
-    - elx-netbilling
-
 - name: Retrieve URL for latest repo release
   run_once: true
   uri:
@@ -56,6 +49,17 @@
       Authorization: "Bearer {{ elx_github_token_ro }}"
       X-GitHub-Api-Version: "2022-11-28"
   register: elx_netbilling_url
+  tags:
+    - elx-netbilling
+
+# Netbilling agent file can not be replaced when the service is running
+# We can do this with a when changed on download checksum diff when we add checksum
+- name: Make sure elx-netbilling service is stopped
+  service:
+    name: elx_netbilling_agent
+    state: stopped
+    daemon_reload: true
+  ignore_errors: true
   tags:
     - elx-netbilling
 
@@ -77,6 +81,17 @@
     path: "{{ elx_netbilling_path }}"
     owner: root
     group: root
+    mode: '0755'
+  notify: Restart elx-netbilling
+  tags:
+    - elx-netbilling
+
+- name: Create billing agent save-state directory
+  file:
+    path: "{{ elx_netbilling_statedir_path }}"
+    owner: root
+    group: root
+    state: directory
     mode: '0755'
   notify: Restart elx-netbilling
   tags:
