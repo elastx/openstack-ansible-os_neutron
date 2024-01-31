@@ -1,5 +1,73 @@
 ---
 
+- name: Retrieve URL for latest repo release
+  run_once: true
+  delegate_to: localhost
+  uri:
+    url: https://api.github.com/repos/elastx/{{ elx_netbilling_repo }}/releases/latest
+    method: GET
+    headers:
+      Accept: "application/vnd.github+json"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
+  register: elx_netbilling_url
+  tags:
+    - elx-netbilling
+
+- name: Download latest release
+  run_once: true
+  delegate_to: localhost
+  uri:
+    url: '{{ elx_netbilling_url.json.assets[0].url }}'
+    method: GET
+    dest: "/tmp/elx-netbilling-agent"
+    headers:
+      Accept: "application/octet-stream"
+      Authorization: "Bearer {{ elx_github_token_ro }}"
+      X-GitHub-Api-Version: "2022-11-28"
+  tags:
+    - elx-netbilling
+
+- name: Register checksum of most recently released agent
+  run_once: true
+  delegate_to: localhost
+  ansible.builtin.stat:
+    path: "/tmp/elx-netbilling-agent"
+    checksum_algorithm: sha256
+  register: agent_desired
+  tags:
+    - elx-netbilling
+
+- name: Register checksum of installed agent
+  ansible.builtin.stat:
+    path: "{{ elx_netbilling_path }}"
+    checksum_algorithm: sha256
+  register: agent_current
+  tags:
+    - elx-netbilling
+
+- name: Make sure elx_netbilling_service is stopped if newer agent is available
+  service:
+    name: elx_netbilling_agent
+    state: stopped
+    daemon_reload: true
+  when:
+    - agent_current.stat.exists
+    - agent_desired.stat.checksum != agent_current.stat.checksum
+  tags:
+    - elx-netbilling
+
+- name: Install agent if not existing or checksum differs
+  ansible.builtin.copy:
+    src: "/tmp/elx-netbilling-agent"
+    dest: "{{ elx_netbilling_path }}"
+    owner: root
+    group: root
+    mode: '0755'
+  notify: Restart elx-netbilling
+  tags:
+    - elx-netbilling
+
 - name: Configure elx-netbilling service
   ansible.builtin.template:
     src: "elx_netbilling_agent.service.j2"
@@ -39,44 +107,12 @@
   tags:
     - elx-netbilling
 
-- name: Make sure elx-netbilling service is stopped
-  service:
-    name: elx_netbilling_agent
-    state: stopped
-  tags:
-    - elx-netbilling
-
-- name: Retrieve URL for latest repo release
-  run_once: true
-  uri:
-    url: https://api.github.com/repos/elastx/{{ elx_netbilling_repo }}/releases/latest
-    method: GET
-    headers:
-      Accept: "application/vnd.github+json"
-      Authorization: "Bearer {{ elx_github_token_ro }}"
-      X-GitHub-Api-Version: "2022-11-28"
-  register: elx_netbilling_url
-  tags:
-    - elx-netbilling
-
-- name: Download latest release
-  uri:
-    url: '{{ elx_netbilling_url.json.assets[0].url }}'
-    method: GET
-    dest: "{{ elx_netbilling_path }}"
-    headers:
-      Accept: "application/octet-stream"
-      Authorization: "Bearer {{ elx_github_token_ro }}"
-      X-GitHub-Api-Version: "2022-11-28"
-  notify: Restart elx-netbilling
-  tags:
-    - elx-netbilling
-
-- name: Change permission of billing agent to 755
+- name: Create billing agent save-state directory
   file:
-    path: "{{ elx_netbilling_path }}"
+    path: "{{ elx_netbilling_statedir_path }}"
     owner: root
     group: root
+    state: directory
     mode: '0755'
   notify: Restart elx-netbilling
   tags:
@@ -90,3 +126,10 @@
     daemon_reload: true
   tags:
     - elx-netbilling
+
+- name: Remove local agent
+  delegate_to: localhost
+  run_once: true
+  ansible.builtin.file:
+    path: /tmp/elx-netbilling-agent
+    state: absent
