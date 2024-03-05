@@ -115,12 +115,6 @@
   tags:
     - neutron-install
 
-# During upgrade from Pike to Queens an opflex debian package was renamed and its service needs
-# to be stopped and uninstalled before installing the new one
-#- include: opflex_upgrade_check.yml
-#  tags:
-#    - neutron-install
-
 - import_tasks: neutron_install.yml
   tags:
     - neutron-install
