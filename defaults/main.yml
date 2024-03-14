@@ -107,19 +107,19 @@ networking_nsxlib_git_install_branch: master
 
 neutron_upper_constraints_url: "{{ requirements_git_url | default('https://releases.openstack.org/constraints/upper/' ~ requirements_git_install_branch | default('master')) }}"
 
-# Cisco ACI Opflex integration (based on the latest wallaby releases available in the git-repos as of 2024-03-13)
+# Cisco ACI Opflex integration (based on the 5.2.8-yoga-20230801-focal release)
 group_based_policy_git_repo: https://github.com/noironetworks/group-based-policy
-group_based_policy_git_install_branch: 14.8.0
+group_based_policy_git_install_branch: 16.0.0
 group_based_policy_client_git_repo: https://github.com/noironetworks/python-group-based-policy-client
-group_based_policy_client_git_install_branch: 10.5.0
+group_based_policy_client_git_install_branch: 12.0.0
 group_based_policy_automation_git_repo: https://github.com/noironetworks/group-based-policy-automation
-group_based_policy_automation_git_install_branch: 14.1.0
+group_based_policy_automation_git_install_branch: 16.0.0
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
 opflex_aci_integration_module_git_install_branch: 0.26.1
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.10.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 14.6.0
+opflex_agent_git_install_branch: 16.4.1
 opflex_agent_git_package_name: neutron-opflex-agent
 opflex_acitoolkit_git_repo: https://github.com/noironetworks/acitoolkit
 opflex_acitoolkit_git_install_branch: 0.5.0
