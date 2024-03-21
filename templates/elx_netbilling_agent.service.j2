@@ -10,3 +10,6 @@ ExecStart={{ elx_netbilling_path }} start --blacklist-cidr-json {{ elx_netbillin
 EnvironmentFile=/root/netbilling-openrc
 Restart=on-failure
 RestartPreventExitStatus=1
+
+[Install]
+WantedBy=multi-user.target
