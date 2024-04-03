@@ -117,7 +117,7 @@ opflex_aci_integration_module_git_install_branch: 0.26.1
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.10.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 12.7.1
+opflex_agent_git_install_branch: 12.8.0
 opflex_agent_git_package_name: neutron-opflex-agent
 opflex_acitoolkit_git_repo: https://github.com/noironetworks/acitoolkit
 opflex_acitoolkit_git_install_branch: 0.5.0
