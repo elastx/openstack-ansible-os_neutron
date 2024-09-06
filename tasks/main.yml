@@ -205,6 +205,7 @@
 - import_tasks: elx_netbilling.yml
   when:
     - "neutron_plugin_type == 'ml2.opflex'"
+    - neutron_services['opflex-neutron-agent']['group'] in group_names
   tags:
     - elx-netbilling
 
