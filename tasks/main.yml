@@ -188,7 +188,7 @@
     - uwsgi
 
 - name: Setup opflex
-  include: opflex.yml
+  import_tasks: opflex.yml
   static: no
   when:
     - "neutron_plugin_type == 'ml2.opflex'"
