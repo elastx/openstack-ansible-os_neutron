@@ -107,6 +107,10 @@
 - name: Activate sFlow on all Open VSwitch bridges
   shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
   loop: "{{ sflow_bridges }}"
+  retries: 3
+  delay: 5
+  register: sflow_init
+  until: sflow_init.rc == 0
   tags:
     - elx-netbilling
 
