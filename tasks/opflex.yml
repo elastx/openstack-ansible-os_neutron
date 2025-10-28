@@ -131,8 +131,6 @@
       mode: "0755"
     - path: /run/aim-aid
       state: directory
-      owner: neutron
-      group: neutron
       mode: "0755"
 #    - path: /var/log/neutron/aim-aid.log
 #      state: touch
