@@ -115,14 +115,14 @@ group_based_policy_client_git_install_branch: 12.1.0
 group_based_policy_automation_git_repo: https://github.com/noironetworks/group-based-policy-automation
 group_based_policy_automation_git_install_branch: 16.0.0
 opflex_aci_integration_module_git_repo: https://github.com/noironetworks/aci-integration-module
-opflex_aci_integration_module_git_install_branch: 0.28.1
+opflex_aci_integration_module_git_install_branch: 0.29.1
 opflex_apic_api_git_repo: https://github.com/noironetworks/apicapi
 opflex_apic_api_git_install_branch: 1.11.0
 opflex_agent_git_repo: https://github.com/noironetworks/python-opflex-agent
-opflex_agent_git_install_branch: 16.5.0
+opflex_agent_git_install_branch: 16.6.0
 opflex_agent_git_package_name: neutron-opflex-agent
 opflex_acitoolkit_git_repo: https://github.com/noironetworks/acitoolkit
-opflex_acitoolkit_git_install_branch: 0.5.0
+opflex_acitoolkit_git_install_branch: 0.5.1
 
 # Developer mode
 neutron_developer_mode: false
