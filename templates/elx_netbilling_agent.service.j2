@@ -8,8 +8,9 @@ User=root
 Group=root
 ExecStart={{ elx_netbilling_path }} start --blacklist-cidr-json {{ elx_netbilling_path }}.conf
 EnvironmentFile=/root/netbilling-openrc
-Restart=on-failure
+Restart=always
 RestartPreventExitStatus=1
+RuntimeMaxSec=86400
 
 [Install]
 WantedBy=multi-user.target
