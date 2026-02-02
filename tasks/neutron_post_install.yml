@@ -208,6 +208,14 @@
     - neutron_services['neutron-l3-agent']['group'] in group_names
     - item.condition | default(True)
 
+- name: Create neutron api audit map file
+  template:
+    src: api_audit_map.conf.j2
+    dest: /etc/neutron/api_audit_map.conf
+  when:
+    - "neutron_services['neutron-server']['group'] in group_names"
+    - neutron_keystone_audit_middlware_enabled | bool
+
 - name: Stop haproxy service on debian derivatives with standalone network nodes
   service:
     name: haproxy

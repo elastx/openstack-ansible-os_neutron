@@ -420,6 +420,10 @@ neutron_keystone_auth_plugin: "{{ neutron_keystone_auth_type }}"
 neutron_keystone_auth_type: password
 neutron_service_in_ldap: "{{ service_ldap_backend_enabled | default(False) }}"
 
+neutron_keystone_audit_middlware_enabled: false
+neutron_keystone_audit_middlware_ignore_list: ""
+neutron_keystone_audit_middlware_driver: log
+
 ###
 ### Telemetry integration
 ###

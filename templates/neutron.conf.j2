@@ -215,6 +215,17 @@ connection_recycle_time = {{ neutron_db_connection_recycle_time }}
 service_provider = {{ neutron_vpnaas_service_provider }}
 {% endif %}
 
+{% if neutron_keystone_audit_middlware_enabled %}
+# Remember to set api paste overrides to enable audit middleware
+[audit_middleware_notifications]
+driver = {{ neutron_keystone_audit_middlware_driver }}
+audit_map_file = /etc/neutron/api_audit_map.conf
+{% if "messaging" in neutron_keystone_audit_middlware_driver %}
+transport_url = {{ neutron_oslomsg_notify_transport }}://{% for host in neutron_oslomsg_notify_servers.split(',') %}{{ neutron_oslomsg_notify_userid }}:{{ neutron_oslomsg_notify_password }}@{{ host }}:{{ neutron_oslomsg_notify_port }}{% if not loop.last %},{% else %}/{{ neutron_oslomsg_notify_vhost }}{% if neutron_oslomsg_notify_use_ssl | bool %}?ssl=1&ssl_version={{ neutron_oslomsg_notify_ssl_version }}&ssl_ca_file={{ neutron_oslomsg_notify_ssl_ca_file }}{% else %}?ssl=0{% endif %}{% endif %}{% endfor %}
+{% endif %}
+ignore_req_list = {{ neutron_keystone_audit_middlware_ignore_list }}
+{% endif %}
+
 {# End of server side configuration #}
 {% endif %}
 
