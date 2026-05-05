@@ -101,7 +101,7 @@
   become_user: "{{ neutron_system_user_name }}"
   delegate_to: "{{ groups[neutron_services['neutron-server']['group']][0] }}"
   when:
-    - "ansible_local['openstack_ansible']['neutron']['need_db_contract'] | bool"
+    - "ansible_local['openstack_ansible']['neutron']['need_db_contract'] | default(false) | bool"
     - "_neutron_is_first_play_host"
   listen:
     - "Restart neutron services"
