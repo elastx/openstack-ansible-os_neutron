@@ -155,10 +155,10 @@
       mode: "0755"
     - path: /run/aid/events
       state: directory
-      mode: "02755"
+      mode: "2755"
     - path: /run/aim-aid
       state: directory
-      mode: "02755"
+      mode: "2755"
 #    - path: /var/log/neutron/aim-aid.log
 #      state: touch
 #      mode: "0640"
