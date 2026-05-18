@@ -104,6 +104,16 @@
   tags:
     - elx-netbilling
 
+- name: Wait for OVS bridges to exist before activating sFlow
+  command: "ovs-vsctl br-exists {{ item }}"
+  loop: "{{ sflow_bridges }}"
+  retries: 30
+  delay: 10
+  register: _bridge_exists
+  until: _bridge_exists.rc == 0
+  tags:
+    - elx-netbilling
+
 - name: Activate sFlow on all Open VSwitch bridges
   shell: 'SFLOWUUID=$(ovs-vsctl -- --id=@sflow create sflow agent={{ inventory_hostname }} target="127.0.0.123\:6343" header=128 sampling=512 polling=30 -- set bridge {{ item }} sflow=@sflow)'
   loop: "{{ sflow_bridges }}"
