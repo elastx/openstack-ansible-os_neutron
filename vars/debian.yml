@@ -123,7 +123,6 @@ neutron_opflex_distro_ovs_agent_packages:
   - name: openvswitch-common
   - name: openvswitch-switch
   - name: supervisor
-  - name: pyasyncore
 
 opflex_apt_repo_url: "http://localhost/ubuntu"
 opflex_repo:
